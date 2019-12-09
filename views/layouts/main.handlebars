@@ -3,13 +3,123 @@
 
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
   <link rel="stylesheet" href="/styles/styles.css" media="screen" title="no title" charset="utf-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- had to take out bootstrap slim Jquery- it was disabling me from being able to use ajax-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
   <title>Home Page</title>
+  <!-- not working for some reason-->
+  <script src="js/index.js"></script>
 </head>
 
 <body>
   {{{body}}}
+
+  <script type="text/javascript">
+    // setting attributes of the data we get from mysql
+    // change 4 to however many songs we decide to include
+    // the attribute values below should be dynamically populated with sql
+
+    for (i = 1; i < 4; i++) {
+      $("#song" + i + "name")
+        .parent()
+        .attr(
+          "songName",
+          "Song " + i + " name (this is to be dynamically populated with sql)"
+        );
+      $("#song" + i + "artist")
+        .parent()
+        .attr(
+          "artistName",
+          "Song " + i + " Artist (this is to be dynamically populated with sql)"
+        );
+      $("#song" + i + "details")
+        .parent()
+        .attr(
+          "extraDetails",
+          "Song " + i + " Details (this is to be dynamically populated with sql)"
+        );
+    }
+    // displaying dynamically populated information for song in an attribute.
+    var songNameArray = [];
+    var artistNameArray = [];
+    var songDetailsArray = [];
+    // change 4 to however many songs we decide to include
+    for (i = 1; i < 4; i++) {
+      songNameArray[i - 1] = $("#song" + i + "name").parent().attr("songName");
+      $("#song" + i + "name").html(songNameArray[i - 1]);
+
+      artistNameArray[i - 1] = $("#song" + i + "artist").parent().attr("artistName");
+      $("#song" + i + "artist").html(artistNameArray[i - 1]);
+
+      songDetailsArray[i - 1] = $("#song" + i + "name").parent().attr("extraDetails");
+      $("#song" + i + "details").html(songDetailsArray[i - 1]);
+    }
+
+    $(".likeButton").on("click", function () {
+
+      var favoriteSongName = $(this)
+        .parent()
+        .attr("songName");
+      var artistOfFavSong = $(this)
+        .parent()
+        .attr("artistName");
+      var detailsOfFavSong = $(this)
+        .parent()
+        .attr("extraDetails");
+
+      //post to DB - favorites table
+
+      var newFavoriteSong = {
+        name: favoriteSongName,
+        artist: artistOfFavSong,
+        details: detailsOfFavSong
+      }
+      $("#carouselExampleCaptions").carousel("next");
+      $.ajax("/api/favsong", {
+        type: "POST",
+        data: newFavoriteSong
+      }).then(
+        function () {
+          console.log("added a new favorite song");
+          // Reload the page to get the updated list
+          // Scenario 1:  use Jquery to dynamically populate favorites list.  However this would still need a page refresh since
+          // we are getting data from the favorties last table
+          // Scenario 2:  have favorites be on another page- that still needs to be reloaded though and won't update if you
+          // have that page and the main page up at the same time 
+
+          // USE JQUERY TO RENDER- THESE SAME FAVORITE RESULTS SHOULD POPULATE ANYWAY (AND OVERWRITE THESE) WHEN YOU REFRESH THE PAGE
+          // location.reload();
+          //<li><span id="favSong1Name"><strong>Song Name:</strong></span>
+          //  <br>
+          //  <span id= "favSong1Artist"><strong>Artist: </strong></span>
+          //  <br>
+          //  <button class="btn btn-danger float-right delete">ｘ</button>
+          //</li>
+          //<br>
+
+          $(".local-render")
+            .append(
+              "<li><strong>Song Name: </strong>" + newFavoriteSong.name +
+              "<br> <strong> Artist Name: </strong>" + newFavoriteSong.artist + "<br> " +
+              "<button class='btn btn-danger float-right delete'>ｘ</button> </li> <br>"
+            )
+        }
+      );
+    });
+
+    $(".dislikeButton").on("click", function () {
+      $("#carouselExampleCaptions").carousel("next");
+    })
+  </script>
 </body>
 
 </html>
