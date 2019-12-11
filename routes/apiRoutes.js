@@ -9,15 +9,24 @@ module.exports = function(app) {
   });
 
   // Create a new example
-  app.post("/api/examples", function(req, res) {
-    db.Example.create(req.body).then(function(dbExample) {
-      res.json(dbExample);
-    });
+  app.post("/api/favsong", function(req, res) {
+    db.favoriteSongs
+      .create({
+        songName: req.body.name,
+        artistName: req.body.artist,
+        songDetails: req.body.details
+      })
+      .then(function(response) {
+        console.log(response);
+        res.json({ id: response.insertId });
+      });
   });
 
   // Delete an example by id
   app.delete("/api/examples/:id", function(req, res) {
-    db.Example.destroy({ where: { id: req.params.id } }).then(function(dbExample) {
+    db.Example.destroy({ where: { id: req.params.id } }).then(function(
+      dbExample
+    ) {
       res.json(dbExample);
     });
   });
