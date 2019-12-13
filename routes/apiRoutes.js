@@ -1,3 +1,7 @@
+// For this to work:
+// - Create a table named 'songs' that holds all the songs in our database.
+// - Create a table named 'users' that holds usernames and passwords of our users.
+
 var db = require("../models");
 
 module.exports = function(app) {
