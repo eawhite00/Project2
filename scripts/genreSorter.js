@@ -1,40 +1,44 @@
 // fetch user data
 var user = IMPORTUSERDATA;
 
-ratingStore();
+ratingStore(user.rapLike, user.rapDislike);
+ratingStore(user.countryLike, user.countryDislike);
+ratingStore(user.popLike, user.popDislike);
+ratingStore(user.rockLike, user.rockDislike);
+ratingStore(user.altLike, user.altDislike);
 
 var storageA;
 var storageB;
 var percentage;
 
-function ratingStore() {
+function ratingStore(like, dislike) {
   // Rock Storage
-  storageA = parseFloat(user.rockLike);
-  storageB = parseFloat(user.rockDislike);
+  storageA = parseFloat(like);
+  storageB = parseFloat(dislike);
   ratingMath();
   rockRate = percentage;
 
   // Country Storage
-  storageA = parseFloat(user.countryLike);
-  storageB = parseFloat(user.countryDislike);
+  storageA = parseFloat(like);
+  storageB = parseFloat(dislike);
   ratingMath();
   countryRate = percentage;
 
   // Rap Storage
-  storageA = parseFloat(user.rapLike);
-  storageB = parseFloat(user.rapDislike);
+  storageA = parseFloat(like);
+  storageB = parseFloat(dislike);
   ratingMath();
   rapRate = percentage;
 
   // Alternative Storage
-  storageA = parseFloat(user.altLike);
-  storageB = parseFloat(user.altDislike);
+  storageA = parseFloat(like);
+  storageB = parseFloat(dislike);
   ratingMath();
   altRate = percentage;
 
   // Pop Storage
-  storageA = parseFloat(user.popLike);
-  storageB = parseFloat(user.popDislike);
+  storageA = parseFloat(like);
+  storageB = parseFloat(dislike);
   ratingMath();
   popRate = percentage;
 
