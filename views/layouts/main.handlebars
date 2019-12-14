@@ -24,101 +24,115 @@
   {{{body}}}
 
   <script type="text/javascript">
-    // setting attributes of the data we get from mysql
-    // change 4 to however many songs we decide to include
-    // the attribute values below should be dynamically populated with sql
+    //<div class="carousel-inner">
+    //          <div class="carousel-item active">
+    //            <img
+    //            src="http://getwallpapers.com/wallpaper/full/a/1/e/898705-gorgerous-nice-pictures-for-background-1920x1200-1080p.jpg"
+    //              class="d-block w-100 albumArt" id="art1" alt="...">
+    //            <div class="carousel-caption d-none d-md-block">
+    //              <h5 id="song1name"></h5>
+    //              <p id="song1artist"></p>
+    //              <p id="song1details"></p>
+    //              <button type="button" class="btn btn-success btn-lg likeButton">Like</button>
+    //              <button type="button" class="btn btn-danger btn-lg dislikeButton">Dislike</button>
+    //            </div>
+    //           </div>
+    $(document).ready(function () {
 
-    for (i = 1; i < 4; i++) {
-      $("#song" + i + "name")
-        .parent()
-        .attr(
-          "songName",
-          "Song " + i + " name (this is to be dynamically populated with sql)"
-        );
-      $("#song" + i + "artist")
-        .parent()
-        .attr(
-          "artistName",
-          "Song " + i + " Artist (this is to be dynamically populated with sql)"
-        );
-      $("#song" + i + "details")
-        .parent()
-        .attr(
-          "extraDetails",
-          "Song " + i + " Details (this is to be dynamically populated with sql)"
-        );
-    }
-    // displaying dynamically populated information for song in an attribute.
-    var songNameArray = [];
-    var artistNameArray = [];
-    var songDetailsArray = [];
-    // change 4 to however many songs we decide to include
-    for (i = 1; i < 4; i++) {
-      songNameArray[i - 1] = $("#song" + i + "name").parent().attr("songName");
-      $("#song" + i + "name").html(songNameArray[i - 1]);
+      function makeInitialCarousel() {
+        var imageID = "http://getwallpapers.com/wallpaper/full/a/1/e/898705-gorgerous-nice-pictures-for-background-1920x1200-1080p.jpg";
+        var songName = "songName from backend";
+        var artistName = "artistName from backend";
+        var songDetails = "songDetails from backend";
 
-      artistNameArray[i - 1] = $("#song" + i + "artist").parent().attr("artistName");
-      $("#song" + i + "artist").html(artistNameArray[i - 1]);
+        var carouselOuterDiv = $("<div class='carousel-item active'>");
+        var imgLink = $("<img class='d-block w-100 albumArt' alt='Album Art'>");
+        var carouselInnerDiv = $("<div class='carousel-caption d-none d-md-block'>");
 
-      songDetailsArray[i - 1] = $("#song" + i + "name").parent().attr("extraDetails");
-      $("#song" + i + "details").html(songDetailsArray[i - 1]);
-    }
+        var songNameJquery = $("<h5></h5>");
+        var artistNameJquery = $("<p></p>");
+        var songDetailsJquery = $("<p></p>");
 
-    $(".likeButton").on("click", function () {
+        var likeButton = $("<button type='button' class='btn btn-success btn-lg likeButton'>Like</button>");
+        var dislikeButton = $("<button type='button' class='btn btn-danger btn-lg likeButton'>Dislike</button>");
+        var endDivs = $("</div></div>");
 
-      var favoriteSongName = $(this)
-        .parent()
-        .attr("songName");
-      var artistOfFavSong = $(this)
-        .parent()
-        .attr("artistName");
-      var detailsOfFavSong = $(this)
-        .parent()
-        .attr("extraDetails");
+        imgLink.attr("src", imageID);
+        songNameJquery.text(songName);
+        artistNameJquery.text(artistName);
+        songDetailsJquery.text(songDetails);
 
-      //post to DB - favorites table
-
-      var newFavoriteSong = {
-        name: favoriteSongName,
-        artist: artistOfFavSong,
-        details: detailsOfFavSong
+        $(".carousel-inner").append(carouselOuterDiv);
+        carouselOuterDiv.append(imgLink);
+        carouselOuterDiv.append(carouselInnerDiv);
+        carouselInnerDiv.append(songNameJquery);
+        carouselInnerDiv.append(artistNameJquery);
+        carouselInnerDiv.append(songDetailsJquery);
+        carouselInnerDiv.append(likeButton);
+        carouselInnerDiv.append(dislikeButton);
+        carouselInnerDiv.append(endDivs);
       }
-      $("#carouselExampleCaptions").carousel("next");
-      $.ajax("/api/favsong", {
-        type: "POST",
-        data: newFavoriteSong
-      }).then(
-        function () {
-          console.log("added a new favorite song");
-          // Reload the page to get the updated list
-          // Scenario 1:  use Jquery to dynamically populate favorites list.  However this would still need a page refresh since
-          // we are getting data from the favorties last table
-          // Scenario 2:  have favorites be on another page- that still needs to be reloaded though and won't update if you
-          // have that page and the main page up at the same time 
 
-          // USE JQUERY TO RENDER- THESE SAME FAVORITE RESULTS SHOULD POPULATE ANYWAY (AND OVERWRITE THESE) WHEN YOU REFRESH THE PAGE
-          // location.reload();
-          //<li><span id="favSong1Name"><strong>Song Name:</strong></span>
-          //  <br>
-          //  <span id= "favSong1Artist"><strong>Artist: </strong></span>
-          //  <br>
-          //  <button class="btn btn-danger float-right delete">ｘ</button>
-          //</li>
-          //<br>
+      $(".XlikeButton").on("click", function () {
 
-          $(".local-render")
-            .append(
-              "<li><strong>Song Name: </strong>" + newFavoriteSong.name +
-              "<br> <strong> Artist Name: </strong>" + newFavoriteSong.artist + "<br> " +
-              "<button type='button' class='btn btn-danger float-right delete' data-toggle='popover' title='Feature not coded yet' data-content='Deleting favorites still to be coded in.'>ｘ</button> </li> <br>"
-            )
+        var favoriteSongName = $(this)
+          .parent()
+          .attr("songName");
+        var artistOfFavSong = $(this)
+          .parent()
+          .attr("artistName");
+        var detailsOfFavSong = $(this)
+          .parent()
+          .attr("extraDetails");
+
+        //post to DB - favorites table
+
+        var newFavoriteSong = {
+          name: favoriteSongName,
+          artist: artistOfFavSong,
+          details: detailsOfFavSong
         }
-      );
-    });
+        $("#carouselExampleCaptions").carousel("next");
+        $.ajax("/api/favsong", {
+          type: "POST",
+          data: newFavoriteSong
+        }).then(
+          function () {
+            console.log("added a new favorite song");
+            // Reload the page to get the updated list
+            // Scenario 1:  use Jquery to dynamically populate favorites list.  However this would still need a page refresh since
+            // we are getting data from the favorties last table
+            // Scenario 2:  have favorites be on another page- that still needs to be reloaded though and won't update if you
+            // have that page and the main page up at the same time 
 
-    $(".dislikeButton").on("click", function () {
-      $("#carouselExampleCaptions").carousel("next");
-    })
+            // USE JQUERY TO RENDER- THESE SAME FAVORITE RESULTS SHOULD POPULATE ANYWAY (AND OVERWRITE THESE) WHEN YOU REFRESH THE PAGE
+            // location.reload();
+            //<li><span id="favSong1Name"><strong>Song Name:</strong></span>
+            //  <br>
+            //  <span id= "favSong1Artist"><strong>Artist: </strong></span>
+            //  <br>
+            //  <button class="btn btn-danger float-right delete">ｘ</button>
+            //</li>
+            //<br>
+
+            $(".local-render")
+              .append(
+                "<li><strong>Song Name: </strong>" + newFavoriteSong.name +
+                "<br> <strong> Artist Name: </strong>" + newFavoriteSong.artist + "<br> " +
+                "<button type='button' class='btn btn-danger float-right delete' data-toggle='popover' title='Feature not coded yet' data-content='Deleting favorites still to be coded in.'>ｘ</button> </li> <br>"
+              )
+          }
+        );
+      });
+
+      $(".likeButton").on("click", function () {
+        $("#carouselExampleCaptions").carousel("next");
+      })
+
+      $(".dislikeButton").on("click", function () {
+        $("#carouselExampleCaptions").carousel("next");
+      })
+    });
   </script>
 </body>
 
