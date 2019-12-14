@@ -1,61 +1,106 @@
 // fetch user data
 var user = IMPORTUSERDATA;
 
-ratingStore();
-
 var storageA;
-var storageB;
+var storageC;
 var percentage;
+var rapRate;
+var rockRate;
+var popRate;
+var altRate;
+var countryRate;
+var winnerName;
+var secondName;
 
-function ratingStore() {
-  // Rock Storage
-  storageA = parseFloat(user.rockLike);
-  storageB = parseFloat(user.rockDislike);
-  ratingMath();
-  rockRate = percentage;
+// Score Rock
+ratingStore(user.rockLike, user.rockDislike, rockRate);
+rockRate = [percentage, "Rock"];
 
-  // Country Storage
-  storageA = parseFloat(user.countryLike);
-  storageB = parseFloat(user.countryDislike);
-  ratingMath();
-  countryRate = percentage;
+// Score Rap
+ratingStore(user.rapLike, user.rapDislike, rapRate);
+rapRate = [percentage, "Rap"];
 
-  // Rap Storage
-  storageA = parseFloat(user.rapLike);
-  storageB = parseFloat(user.rapDislike);
-  ratingMath();
-  rapRate = percentage;
+// Score Pop
+ratingStore(user.popLike, user.popDislike, popRate);
+popRate = [percentage, "Pop"];
 
-  // Alternative Storage
-  storageA = parseFloat(user.altLike);
-  storageB = parseFloat(user.altDislike);
-  ratingMath();
-  altRate = percentage;
+// Score Country
+ratingStore(user.countryLike, user.countryDislike, countryRate);
+countryRate = [percentage, "Country"];
 
-  // Pop Storage
-  storageA = parseFloat(user.popLike);
-  storageB = parseFloat(user.popDislike);
-  ratingMath();
-  popRate = percentage;
+// Score Alternative
+ratingStore(user.altLike, user.altDislike, altRate);
+altRate = [percentage, "Alternative"];
 
-  // console log ratings
-  logRatings();
+// Display current scores
+logRatings();
+
+// Store percentages and names for comparing
+var holder = [rockRate, rapRate, popRate, countryRate, altRate];
+
+// Run compare function and display results
+compare();
+
+function compare() {
+  checkList = [];
+
+  //Push percentages to array to sort
+  for (i = 0; i < holder.length; i++) {
+    checkList.push(holder[i][0]);
+  }
+
+  //Sort percentages from biggest to smallest
+  checkList.sort(function(a, b) {
+    return b - a;
+  });
+
+  //Find the genre name of the highest percentage holder
+  for (i = 0; i < holder.length; i++) {
+    if (checkList[0] === holder[i][0]) {
+      winnerName = holder[i][1];
+    }
+  }
+
+  //Find the genre name of the second highest percentage holder
+  for (i = 0; i < holder.length; i++) {
+    if (checkList[1] === holder[i][0]) {
+      secondName = holder[i][1];
+    }
+  }
+
+  //Log the results
+  console.log(
+    "Your favorite genre is " +
+      winnerName +
+      " with a " +
+      checkList[0] +
+      "% like rating"
+  );
+  console.log(
+    "Your second favorite genre is " +
+      secondName +
+      " with a " +
+      checkList[1] +
+      "% like rating"
+  );
 }
 
-// Math to figure out percentages
-function ratingMath() {
-  var storageC = storageA + storageB;
+// Code to store and process song ratings
+function ratingStore(like, dislike) {
+  storageA = parseFloat(like);
 
-  // divide likes by total to get like percentage
+  storageC = parseFloat(dislike) + storageA;
+
+  // Math to figure out percentages
   percentage = storageA / storageC;
   percentage = percentage * 100;
   percentage = Math.round(percentage);
 }
 
 function logRatings() {
-  console.log("Rock like rating is: " + rockRate + "%");
-  console.log("Country like rating is: " + countryRate + "%");
-  console.log("Rap like rating is: " + rapRate + "%");
-  console.log("Alternative like rating is: " + altRate + "%");
-  console.log("Pop like rating is: " + popRate + "%");
+  console.log("Rock like rating is: " + rockRate[0] + "%");
+  console.log("Rap like rating is: " + rapRate[0] + "%");
+  console.log("Pop like rating is: " + popRate[0] + "%");
+  console.log("Country like rating is: " + countryRate[0] + "%");
+  console.log("Alternative like rating is: " + altRate[0] + "%");
 }
