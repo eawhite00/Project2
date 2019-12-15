@@ -14,59 +14,58 @@
               <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
             </ol>-->
             <div class="carousel-inner">
-              
+
             </div>
-              <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-              </a>
-              <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-              </a>
-            </div>
+            <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
           </div>
-          <br>
-          <!--
-<div class="progress">
-  <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-</div>-->
-
-          <!-- instead of using a form to post, we will use the like button in order to post-->
-          <!--<form class="clearfix mb-4" action="POST">
-          <div class="form-group">
-            <label for="example-text"></label>
-            <input type="text" id="example-text" class="form-control" aria-describedby="example-text"
-              placeholder="Enter Song Name">
-          </div>
-          <div class="form-group">
-            <label for="example-description"></label>
-            <textarea class="form-control" id="example-description" aria-describedby="example-description"
-              placeholder="Enter Artist Name"></textarea>
-          </div>
-          <button id="submit" class="btn btn-primary float-right">Submit</button>
-        </form>-->
-
-          <h3>Your favorites:</h3>
-
-          <ul id="example-list" class="list-group-item local-render">
-
-            {{#each favoriteSongs}}
-
-            <li><strong>Song Name: </strong>{{songName}}
-              <br>
-              <strong>Artist: </strong>{{artistName}}
-              <br>
-              <button class="btn btn-danger float-right delete">ｘ</button>
-            </li>
-            <br>
-
-            {{/each}}
-
-          </ul>
         </div>
+        <br>
 
 
+        <h3>Your favorites:</h3>
+
+        <ul id="example-list" class="list-group-item local-render">
+
+          {{#each favoriteSongs}}
+
+          <li><strong>Song Name: </strong>{{songName}}
+            <br>
+            <strong>Artist: </strong>{{artistName}}
+            <br>
+            <button class="btn btn-danger float-right delete">ｘ</button>
+          </li>
+          <br>
+
+          {{/each}}
+
+        </ul>
+      </div>
+
+
+    </div>
+
+    <div class="modal" id="selectionModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">What would you like me to do?</h5>
+          </div>
+          <div class="modal-body">
+            <button type="button" class="btn btn-primary selectButton" choice="recommend">Recommend a Song for me!</button>
+            <button type="button" class="btn btn-primary selectButton" choice="random">Give me Random Songs!</button>
+          </div>
+          <div class="modal-footer">
+            
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</div>

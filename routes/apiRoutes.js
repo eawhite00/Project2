@@ -29,7 +29,7 @@ module.exports = function(app) {
 
   // Post method for creating a login and storing the information in our database.
   // ** Still need to create the model for 'users'. **
-  app.post("/login", function(req, res) {
+  app.post("/api/login", function(req, res) {
     db.User.create({
       username: req.body.username,
       password: req.body.password

@@ -40,104 +40,210 @@
     //           </div>
     $(document).ready(function () {
 
+      var windowLoc = $(location).attr('pathname'); //jquery format to get window.location.pathname
+      // need this so that the appropriate JS fires when the right window is up. 
 
-      function randomSongs() {
-        // put all the below in here.  also need to create another function for recommended songs.  different ajax route for that
+      switch (windowLoc) {
+        case "/":
+          let userID;
+          login();
+          break;
+
+        case "/main":
+          //code here
+          makeAChoice();
+          Songs();
+          break;
       }
 
-      $.ajax({
-        url: "api/random-songs",
-        type: "GET"
-      }).then(function (response) {
-        // if response is an array,
-        var songNameArray = [];
-        var artistNameArray = [];
-        var genreArray = [];
-        var imageArray = [];
+      function makeAChoice() {
+        console.log("modal supposed to pop up")
+        $("#selectionModal").modal({ backdrop: 'static', keyboard: false })
+        $("#selectButton").on("click", function () {
+          $('#selectionModal').modal('hide');
+          if ($(this).attr("choice") === "recommend") {
+            //pass in the choice of recommend to Songs(); so that we can call the right API get path
+          }
+          else {
+            //pass in the choice of random to Songs(); so that we can call the right API get path
+          }
+        })
 
-        for (i = 0; i < response.length; i++) {
-          songNameArray.push(response[i].songName);
-          artistNameArray.push(response[i].artist);
-          genreArray.push(response[i].genre);
-          imageArray.push(response[i].imageArray)
+      }
+
+      function login() {
+        $("#loginButton").on("click", function (event) {
+          let credentialsAreGood = false;
+          event.preventDefault();
+          console.log("Login button pressed")
+          let login = {
+            email: $("#userEmail").val(),
+            password: $("#userPassword").val()
+          }
+          console.log(login.email);
+          console.log(login.password);
+          //find userID using the above (ajax post/get for credentials), if successful
+
+          // FOR TESTING ONLY
+          credentialsAreGood = true;
+          // FOR TESTING ONLY
+
+          $.ajax("/api/login", {
+            type: "POST",
+            data: login
+          }).then(function (response) {
+            // associating the username and password with a userID done on the back-end
+            // need to be sent back the userID;
+            userID = response.userID;
+            credentialsAreGood = true;
+          });
+          if (credentialsAreGood) {
+            window.location.href = "/main";
+          }
+          else {
+            $(".login-modal").append("<br><p style=color:red;>Incorrect Login Information</p>")
+          }
+        });
+      }
+
+
+      function Songs() {
+        console.log("songs script running");
+        // put all the below in here.  also need to create another function for recommended songs?  different ajax route for that
+        $.ajax({
+          url: "api/random-songs",
+          type: "GET"
+        }).then(function (response) {
+          // if response is an array,
+          var songNameArray = ["test"];
+          var artistNameArray = ["test"];
+          var genreArray = ["test"];
+          var imageArray = ["http://getwallpapers.com/wallpaper/full/a/1/e/898705-gorgerous-nice-pictures-for-background-1920x1200-1080p.jpg"];
+
+          for (i = 0; i < response.length; i++) {
+            songNameArray.push(response[i].songName);
+            artistNameArray.push(response[i].artist);
+            genreArray.push(response[i].genre);
+            imageArray.push(response[i].imageArray)
+          }
+          function makeInitialCarousel(img, song, artist, genre) {
+            var imageID = img;
+            var songName = song;
+            var artistName = artist;
+            var songGenre = genre;
+
+            var carouselOuterDiv = $("<div class='carousel-item active'>");
+            var imgLink = $("<img class='d-block w-100 albumArt' alt='Album Art'>");
+            var carouselInnerDiv = $("<div class='carousel-caption d-none d-md-block'>");
+
+            var songNameJquery = $("<h5></h5>");
+            var artistNameJquery = $("<p></p>");
+            var songGenreJquery = $("<p></p>");
+
+            var likeButton = $("<button type='button' class='btn btn-success btn-lg likeButton'>Like</button>");
+            var dislikeButton = $("<button type='button' class='btn btn-danger btn-lg likeButton'>Dislike</button>");
+            var endDivs = $("</div></div>");
+
+            imgLink.attr("src", imageID);
+            songNameJquery.text(songName);
+            artistNameJquery.text(artistName);
+            songGenreJquery.text(songGenre);
+
+            $(".carousel-inner").append(carouselOuterDiv);
+            carouselOuterDiv.append(imgLink);
+            carouselOuterDiv.append(carouselInnerDiv);
+            // doing this to add/subtract from Genre Score
+            carouselInnerDiv.attr("genre", songGenre);
+            // doing this to add/subtract from Genre Score
+            carouselInnerDiv.append(songNameJquery);
+            carouselInnerDiv.append(artistNameJquery);
+            carouselInnerDiv.append(songDetailsJquery);
+            carouselInnerDiv.append(likeButton);
+            carouselInnerDiv.append(dislikeButton);
+            carouselInnerDiv.append(endDivs);
+          }
+
+          function makeCarousel(img, song, artist, genre) {
+            var imageID = img;
+            var songName = song;
+            var artistName = artist;
+            var songGenre = genre;
+
+            var carouselOuterDiv = $("<div class='carousel-item'>");
+            var imgLink = $("<img class='d-block w-100 albumArt' alt='Album Art'>");
+            var carouselInnerDiv = $("<div class='carousel-caption d-none d-md-block'>");
+
+            var songNameJquery = $("<h5></h5>");
+            var artistNameJquery = $("<p></p>");
+            var songGenreJquery = $("<p></p>");
+
+            var likeButton = $("<button type='button' class='btn btn-success btn-lg likeButton'>Like</button>");
+            var dislikeButton = $("<button type='button' class='btn btn-danger btn-lg likeButton'>Dislike</button>");
+            var endDivs = $("</div></div>");
+
+            imgLink.attr("src", imageID);
+            songNameJquery.text(songName);
+            artistNameJquery.text(artistName);
+            songGenreJquery.text(songGenre);
+
+            $(".carousel-inner").append(carouselOuterDiv);
+            carouselOuterDiv.append(imgLink);
+            carouselOuterDiv.append(carouselInnerDiv);
+            // doing this to add/subtract from Genre Score
+            carouselInnerDiv.attr("genre", songGenre);
+            // doing this to add/subtract from Genre Score
+            carouselInnerDiv.append(songNameJquery);
+            carouselInnerDiv.append(artistNameJquery);
+            carouselInnerDiv.append(songDetailsJquery);
+            carouselInnerDiv.append(likeButton);
+            carouselInnerDiv.append(dislikeButton);
+            carouselInnerDiv.append(endDivs);
+          }
+
+          makeInitialCarousel(songNameArray[0], artistNameArray[0], genreArray[0], imageArray[0]);
+          for (i = 0; i < response.length; i++) {
+            makeCarousel(songNameArray[i], artistNameArray[i], genreArray[i], imageArray[i]);
+          }
+        });
+      }
+
+
+
+      $(".likeButton").on("click", function () {
+        var genre = $(this).parent().attr("genre");
+        var toBackEnd = {
+          genre: genre,
+          userID: userID,
         }
+        // need to include userID so backend can properly associate the like to the user's row
+        // maybe this TBDshould be its own route for adding a like to the genre?
+        $.ajax("/api/TBD-LIKE", {
+          type: "POST",
+          data: toBackEnd,
+          // sending the genre to the back so we can add "1" to the (genre)Like
+        }).then(function () {
+          $("#carouselExampleCaptions").carousel("next");
+        })
+      })
 
-      });
-      //put this in the then above
-      function makeInitialCarousel(img, song, artist, genre) {
-        var imageID = "http://getwallpapers.com/wallpaper/full/a/1/e/898705-gorgerous-nice-pictures-for-background-1920x1200-1080p.jpg";
-        var songName = "songName from backend";
-        var artistName = "artistName from backend";
-        var songDetails = "songDetails from backend";
-
-        var carouselOuterDiv = $("<div class='carousel-item active'>");
-        var imgLink = $("<img class='d-block w-100 albumArt' alt='Album Art'>");
-        var carouselInnerDiv = $("<div class='carousel-caption d-none d-md-block'>");
-
-        var songNameJquery = $("<h5></h5>");
-        var artistNameJquery = $("<p></p>");
-        var songDetailsJquery = $("<p></p>");
-
-        var likeButton = $("<button type='button' class='btn btn-success btn-lg likeButton'>Like</button>");
-        var dislikeButton = $("<button type='button' class='btn btn-danger btn-lg likeButton'>Dislike</button>");
-        var endDivs = $("</div></div>");
-
-        imgLink.attr("src", imageID);
-        songNameJquery.text(songName);
-        artistNameJquery.text(artistName);
-        songDetailsJquery.text(songDetails);
-
-        $(".carousel-inner").append(carouselOuterDiv);
-        carouselOuterDiv.append(imgLink);
-        carouselOuterDiv.append(carouselInnerDiv);
-        carouselInnerDiv.append(songNameJquery);
-        carouselInnerDiv.append(artistNameJquery);
-        carouselInnerDiv.append(songDetailsJquery);
-        carouselInnerDiv.append(likeButton);
-        carouselInnerDiv.append(dislikeButton);
-        carouselInnerDiv.append(endDivs);
-      }
-
-      function makeCarousel(img, song, artist, genre) {
-        var imageID = "http://getwallpapers.com/wallpaper/full/a/1/e/898705-gorgerous-nice-pictures-for-background-1920x1200-1080p.jpg";
-        var songName = "songName from backend";
-        var artistName = "artistName from backend";
-        var songDetails = "songDetails from backend";
-
-        var carouselOuterDiv = $("<div class='carousel-item'>");
-        var imgLink = $("<img class='d-block w-100 albumArt' alt='Album Art'>");
-        var carouselInnerDiv = $("<div class='carousel-caption d-none d-md-block'>");
-
-        var songNameJquery = $("<h5></h5>");
-        var artistNameJquery = $("<p></p>");
-        var songDetailsJquery = $("<p></p>");
-
-        var likeButton = $("<button type='button' class='btn btn-success btn-lg likeButton'>Like</button>");
-        var dislikeButton = $("<button type='button' class='btn btn-danger btn-lg likeButton'>Dislike</button>");
-        var endDivs = $("</div></div>");
-
-        imgLink.attr("src", imageID);
-        songNameJquery.text(songName);
-        artistNameJquery.text(artistName);
-        songDetailsJquery.text(songDetails);
-
-        $(".carousel-inner").append(carouselOuterDiv);
-        carouselOuterDiv.append(imgLink);
-        carouselOuterDiv.append(carouselInnerDiv);
-        carouselInnerDiv.append(songNameJquery);
-        carouselInnerDiv.append(artistNameJquery);
-        carouselInnerDiv.append(songDetailsJquery);
-        carouselInnerDiv.append(likeButton);
-        carouselInnerDiv.append(dislikeButton);
-        carouselInnerDiv.append(endDivs);
-      }
-      makeInitialCarousel(songNameArray[0], artistNameArray[0], genreArray[0], imageArray[0]);
-      for (i = 0; i < 2; i++) {
-        makeCarousel();
-      }
+      $(".dislikeButton").on("click", function () {
+        var genre = $(this).parent().attr("genre");
+        var toBackEnd = {
+          genre: genre,
+          userID: userID,
+        }
+        // need to include userID so backend can properly associate the dislike to the user's row
+        // maybe this TBD should be its own route for adding a dislike to the genre?
+        $.ajax("/api/TBD-DISLIKE", {
+          type: "POST",
+          data: toBackEnd,
+          // sending the genre to the back so we can add "1" to the (genre)Dislike
+        }).then(function () {
+          $("#carouselExampleCaptions").carousel("next");
+        })
+      })
 
       $(".XlikeButton").on("click", function () {
-
         var favoriteSongName = $(this)
           .parent()
           .attr("songName");
@@ -187,14 +293,6 @@
           }
         );
       });
-
-      $(".likeButton").on("click", function () {
-        $("#carouselExampleCaptions").carousel("next");
-      })
-
-      $(".dislikeButton").on("click", function () {
-        $("#carouselExampleCaptions").carousel("next");
-      })
     });
   </script>
 </body>
