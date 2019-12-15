@@ -19,7 +19,7 @@ module.exports = function(app) {
 
   // Get 10 random songs from our database and list them out in JSON format. I'm thinking we can then format this data as an array and loop through it on the front-end and display them as questions to the user.
   app.get("/api/random-songs", function(req, res) {
-    db.Song.findAll({ order: Sequelize.literal("rand()"), limit: 10 }).then(
+    db.Song.findAll({ order: db.Sequelize.literal("rand()"), limit: 10 }).then(
       function(randomSongs) {
         console.log(randomSongs);
         res.json(randomSongs);

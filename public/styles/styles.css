@@ -14,7 +14,7 @@
   text-align:center;
 }
 
-#mainTitle {
+#mainTitle, #songScreenTitle {
   font-family: 'Kaushan Script', cursive;
   font-size: 5rem;
   color: green

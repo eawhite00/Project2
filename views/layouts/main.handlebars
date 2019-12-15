@@ -40,38 +40,60 @@
     //           </div>
     $(document).ready(function () {
 
-      var windowLoc = $(location).attr('pathname'); //jquery format to get window.location.pathname
+      var windowLoc = $(location).attr('pathname'); 
       // need this so that the appropriate JS fires when the right window is up. 
+
+      var choice;
 
       switch (windowLoc) {
         case "/":
           let userID;
-          login();
+          loginOrRegister();
           break;
 
         case "/main":
           //code here
           makeAChoice();
-          Songs();
           break;
       }
 
       function makeAChoice() {
-        console.log("modal supposed to pop up")
         $("#selectionModal").modal({ backdrop: 'static', keyboard: false })
-        $("#selectButton").on("click", function () {
+        $(".selectButton").on("click", function () {
+          console.log($(this).attr("choice"));
           $('#selectionModal').modal('hide');
           if ($(this).attr("choice") === "recommend") {
             //pass in the choice of recommend to Songs(); so that we can call the right API get path
+            choice = "recommend";
           }
           else {
             //pass in the choice of random to Songs(); so that we can call the right API get path
+            choice = "random";
           }
+          Songs();
         })
-
       }
 
-      function login() {
+      function loginOrRegister() {
+        $("#registerButton").on("click", function (event) {
+          let credentialsAreGood = false;
+          event.preventDefault();
+          console.log("CreateNew button pressed")
+          let register = {
+            email: $("#newUserEmail").val(),
+            password: $("#newUserPassword").val()
+          }
+          console.log(register.email);
+          console.log(register.password);
+
+          $.ajax("/api/register", {
+            type: "POST",
+            data: register
+          }).then(function (response) {
+          (".login-modal").append("<br><p style=color:blue;>Account Created!  Please Login.</p>")
+          });
+        });
+
         $("#loginButton").on("click", function (event) {
           let credentialsAreGood = false;
           event.preventDefault();
@@ -84,9 +106,9 @@
           console.log(login.password);
           //find userID using the above (ajax post/get for credentials), if successful
 
-          // FOR TESTING ONLY
+          // FOR TESTING ONLY SO IT TAKES YOU TO THE NEXT PAGE:  DELETE IN PRODUCTION
           credentialsAreGood = true;
-          // FOR TESTING ONLY
+          // FOR TESTING ONLY SO IT TAKES YOU TO THE NEXT PAGE:  DELETE IN PRODUCTION
 
           $.ajax("/api/login", {
             type: "POST",
@@ -109,12 +131,19 @@
 
       function Songs() {
         console.log("songs script running");
-        // put all the below in here.  also need to create another function for recommended songs?  different ajax route for that
+        var apiRoute;
+        if (choice === "recommended") {
+          apiRoute = "api/recommended-songs"
+        }
+        else {
+          apiRoute = "api/random-songs"
+        }
         $.ajax({
-          url: "api/random-songs",
+          url: apiRoute,
           type: "GET"
         }).then(function (response) {
-          // if response is an array,
+          console.log(response)
+          // if response is an array
           var songNameArray = ["test"];
           var artistNameArray = ["test"];
           var genreArray = ["test"];
@@ -126,7 +155,10 @@
             genreArray.push(response[i].genre);
             imageArray.push(response[i].imageArray)
           }
-          function makeInitialCarousel(img, song, artist, genre) {
+          // if response is an array
+
+          function makeInitialCarousel(song, artist, genre, img) {
+            console.log(img, song, artist, genre);
             var imageID = img;
             var songName = song;
             var artistName = artist;
@@ -157,13 +189,14 @@
             // doing this to add/subtract from Genre Score
             carouselInnerDiv.append(songNameJquery);
             carouselInnerDiv.append(artistNameJquery);
-            carouselInnerDiv.append(songDetailsJquery);
+            carouselInnerDiv.append(songGenreJquery);
             carouselInnerDiv.append(likeButton);
             carouselInnerDiv.append(dislikeButton);
             carouselInnerDiv.append(endDivs);
           }
 
-          function makeCarousel(img, song, artist, genre) {
+          function makeCarousel(song, artist, genre, img) {
+            console.log(img, song, artist, genre);
             var imageID = img;
             var songName = song;
             var artistName = artist;
@@ -194,12 +227,12 @@
             // doing this to add/subtract from Genre Score
             carouselInnerDiv.append(songNameJquery);
             carouselInnerDiv.append(artistNameJquery);
-            carouselInnerDiv.append(songDetailsJquery);
+            carouselInnerDiv.append(songGenreJquery);
             carouselInnerDiv.append(likeButton);
             carouselInnerDiv.append(dislikeButton);
             carouselInnerDiv.append(endDivs);
           }
-
+          
           makeInitialCarousel(songNameArray[0], artistNameArray[0], genreArray[0], imageArray[0]);
           for (i = 0; i < response.length; i++) {
             makeCarousel(songNameArray[i], artistNameArray[i], genreArray[i], imageArray[i]);
