@@ -2,7 +2,12 @@ var db = require("../models");
 
 module.exports = function(app) {
   // Load index page
+
   app.get("/", function(req, res) {
+    res.render("login", {});
+  });
+
+  app.get("/main", function(req, res) {
     // I think we'll also need to do a sequelize query for the song database.  this one is for favorite songs
     db.favoriteSongs.findAll({}).then(function(response) {
       res.render("index", {

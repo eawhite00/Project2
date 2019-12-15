@@ -5,3 +5,139 @@
 .albumArt {
   filter: brightness(40%);
 }
+
+#login {
+  position:relative
+}
+
+.test1 {
+  text-align:center;
+}
+
+#mainTitle {
+  font-family: 'Kaushan Script', cursive;
+  font-size: 5rem;
+  color: green
+}
+
+.test1 .musicNote {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  margin: -280px 60px 54px  -34px;
+  background:url("../images/small_note.png");
+  z-index:-10;
+  
+  -webkit-animation: test 12s infinite  cubic-bezier(0.35,0.45,0.39,0.29)
+}
+
+.test1 .spotify {
+  display: inline-block;
+  width: 40px;
+  height: 39px;
+  margin: -280px 60px 54px  -34px;
+  background:url("../images/spotify_best.jpg");
+  z-index:-20;
+  
+  -webkit-animation: test 12s infinite  cubic-bezier(0.35,0.45,0.39,0.29)
+}
+
+.test1 span:nth-child(1) {
+  -webkit-animation-delay: 1.3s;
+  -moz-animation-delay: 1.3s;
+}
+.test1 span:nth-child(2) {
+  -webkit-animation-delay: 4.3s;
+  -moz-animation-delay: 4.3s;
+}
+.test1 span:nth-child(3) {
+  -webkit-animation-delay: 8.7s;
+  -moz-animation-delay: 8.7s;
+}
+.test1 span:nth-child(4) {
+  -webkit-animation-delay: 5.1s;
+  -moz-animation-delay: 5.1s;
+}
+.test1 span:nth-child(5) {
+  -webkit-animation-delay: 10.9s;
+  -moz-animation-delay: 10.9s;
+}
+.test1 span:nth-child(6) {
+  -webkit-animation-delay: 7.3s;
+  -moz-animation-delay: 7.3s;
+}
+.test1 span:nth-child(7) {
+  -webkit-animation-delay: 2.4s;
+  -moz-animation-delay: 2.4s;
+}
+.test1 span:nth-child(8) {
+  -webkit-animation-delay: 6.1s;
+  -moz-animation-delay: 6.1s;
+}
+.test1 span:nth-child(9) {
+  -webkit-animation-delay: 0.4s;
+  -moz-animation-delay: 0.4s;
+}
+.test1 span:nth-child(10) {
+  -webkit-animation-delay: 5.9s;
+  -moz-animation-delay: 5.9s;
+}
+.test1 span:nth-child(11) {
+  -webkit-animation-delay: 3.7s;
+  -moz-animation-delay: 3.7s;
+}
+.test1 span:nth-child(12) {
+  -webkit-animation-delay: 11.8s;
+  -moz-animation-delay: 11.8s;
+}
+.test1 span:nth-child(13) {
+  -webkit-animation-delay: 4.4s;
+  -moz-animation-delay: 4.4s;
+}
+.test1 span:nth-child(14) {
+  -webkit-animation-delay: 8.9s;
+  -moz-animation-delay: 8.9s;
+}
+.test1 span:nth-child(15) {
+  -webkit-animation-delay: 9.1s;
+  -moz-animation-delay: 9.1s;
+}
+
+@-webkit-keyframes test {
+  0% {
+    opacity: 1;
+
+	-webkit-transform: translate(0, 0px);
+  }
+  30% {
+    opacity: 1;
+
+	
+  }
+  50% {
+    opacity: 0;
+    -webkit-transform: translate(0px, 400px); 
+  }
+  75% {
+    opacity: 1;
+
+	-webkit-transform: translate(0px, 600px); 
+  }
+  100% {
+    opacity: 0;
+
+	-webkit-transform: translate(0px, 800px);
+  }
+}
+
+/* main container */
+.container{
+	top:0px;
+	background:#fff;
+	width:100%;
+	height:100%;
+	position:relative;
+	left:0%;
+	background:white center top no-repeat;
+}
+
