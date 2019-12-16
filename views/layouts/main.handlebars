@@ -15,6 +15,8 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css?family=Kaushan+Script&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" rel="stylesheet">
   <title>Home Page</title>
   <!-- not working for some reason-->
   <script src="js/index.js"></script>
@@ -24,101 +26,380 @@
   {{{body}}}
 
   <script type="text/javascript">
-    // setting attributes of the data we get from mysql
-    // change 4 to however many songs we decide to include
-    // the attribute values below should be dynamically populated with sql
+    //<div class="carousel-inner">
+    //          <div class="carousel-item active">
+    //            <img
+    //            src="http://getwallpapers.com/wallpaper/full/a/1/e/898705-gorgerous-nice-pictures-for-background-1920x1200-1080p.jpg"
+    //              class="d-block w-100 albumArt" id="art1" alt="...">
+    //            <div class="carousel-caption d-none d-md-block">
+    //              <h5 id="song1name"></h5>
+    //              <p id="song1artist"></p>
+    //              <p id="song1details"></p>
+    //              <button type="button" class="btn btn-success btn-lg likeButton">Like</button>
+    //              <button type="button" class="btn btn-danger btn-lg dislikeButton">Dislike</button>
+    //            </div>
+    //           </div>
+    $(document).ready(function () {
 
-    for (i = 1; i < 4; i++) {
-      $("#song" + i + "name")
-        .parent()
-        .attr(
-          "songName",
-          "Song " + i + " name (this is to be dynamically populated with sql)"
-        );
-      $("#song" + i + "artist")
-        .parent()
-        .attr(
-          "artistName",
-          "Song " + i + " Artist (this is to be dynamically populated with sql)"
-        );
-      $("#song" + i + "details")
-        .parent()
-        .attr(
-          "extraDetails",
-          "Song " + i + " Details (this is to be dynamically populated with sql)"
-        );
-    }
-    // displaying dynamically populated information for song in an attribute.
-    var songNameArray = [];
-    var artistNameArray = [];
-    var songDetailsArray = [];
-    // change 4 to however many songs we decide to include
-    for (i = 1; i < 4; i++) {
-      songNameArray[i - 1] = $("#song" + i + "name").parent().attr("songName");
-      $("#song" + i + "name").html(songNameArray[i - 1]);
+      var windowLoc = $(location).attr('pathname');
+      // need this so that the appropriate JS fires when the right window is up. 
 
-      artistNameArray[i - 1] = $("#song" + i + "artist").parent().attr("artistName");
-      $("#song" + i + "artist").html(artistNameArray[i - 1]);
+      var choice;
 
-      songDetailsArray[i - 1] = $("#song" + i + "name").parent().attr("extraDetails");
-      $("#song" + i + "details").html(songDetailsArray[i - 1]);
-    }
+      switch (windowLoc) {
+        case "/":
+          let userID;
+          loginOrRegister();
+          break;
 
-    $(".likeButton").on("click", function () {
-
-      var favoriteSongName = $(this)
-        .parent()
-        .attr("songName");
-      var artistOfFavSong = $(this)
-        .parent()
-        .attr("artistName");
-      var detailsOfFavSong = $(this)
-        .parent()
-        .attr("extraDetails");
-
-      //post to DB - favorites table
-
-      var newFavoriteSong = {
-        name: favoriteSongName,
-        artist: artistOfFavSong,
-        details: detailsOfFavSong
+        case "/main":
+          //code here
+          $('#songScreenTitle').attr("style", "opacity: 0");
+          $('#test').attr("style", "opacity: 0");
+          $('#yourChoice').attr("style", "opacity: 0");
+          $('.bd-example').attr("style", "opacity: 0");
+          $('.changeButton').attr("style", "opacity: 0");
+          makeAChoice();
+          break;
       }
-      $("#carouselExampleCaptions").carousel("next");
-      $.ajax("/api/favsong", {
-        type: "POST",
-        data: newFavoriteSong
-      }).then(
-        function () {
-          console.log("added a new favorite song");
-          // Reload the page to get the updated list
-          // Scenario 1:  use Jquery to dynamically populate favorites list.  However this would still need a page refresh since
-          // we are getting data from the favorties last table
-          // Scenario 2:  have favorites be on another page- that still needs to be reloaded though and won't update if you
-          // have that page and the main page up at the same time 
 
-          // USE JQUERY TO RENDER- THESE SAME FAVORITE RESULTS SHOULD POPULATE ANYWAY (AND OVERWRITE THESE) WHEN YOU REFRESH THE PAGE
-          // location.reload();
-          //<li><span id="favSong1Name"><strong>Song Name:</strong></span>
-          //  <br>
-          //  <span id= "favSong1Artist"><strong>Artist: </strong></span>
-          //  <br>
-          //  <button class="btn btn-danger float-right delete">ｘ</button>
-          //</li>
-          //<br>
+      function makeAChoice() {
+        $("#selectionModal").modal({ backdrop: 'static', keyboard: false })
+        $(".selectButton").on("click", function () {
+          console.log($(this).attr("choice"));
+          $('#selectionModal').modal('hide');
+          $('#songScreenTitle').attr("style", "opacity: 1");
+          $('#test').attr("style", "opacity: 1");
+          $('#yourChoice').attr("style", "opacity: 1");
+          $('.bd-example').attr("style", "opacity: 1");
+          $('.changeButton').attr("style", "opacity: 1");
+          $("#songScreenTitle").css("-webkit-animation", "fadein 1s")
+          $('#test').css("-webkit-animation", "fadeInSlide 3s")
+          $('#yourChoice').css("-webkit-animation", "fadein 1s")
+          $('.bd-example').css("-webkit-animation", "fadein 2s")
+          $('.changeButton').css("-webkit-animation", "fadein 4s")
 
-          $(".local-render")
-            .append(
-              "<li><strong>Song Name: </strong>" + newFavoriteSong.name +
-              "<br> <strong> Artist Name: </strong>" + newFavoriteSong.artist + "<br> " +
-              "<button type='button' class='btn btn-danger float-right delete' data-toggle='popover' title='Feature not coded yet' data-content='Deleting favorites still to be coded in.'>ｘ</button> </li> <br>"
-            )
+          if ($(this).attr("choice") === "recommend") {
+            //pass in the choice of recommend to Songs(); so that we can call the right API get path
+            choice = "recommend";
+          }
+          else {
+            //pass in the choice of random to Songs(); so that we can call the right API get path
+            choice = "random";
+          }
+          // FOR TESTING ONLY - DELETE IN PRODUCTION
+          userID = "test"
+          // FOR TESTING ONLY - DELETE IN PRODUCTION
+          Songs();
+        })
+      }
+
+      function loginOrRegister() {
+        var initialGenre;
+
+        $(".initialChoice").on("click", function (event) {
+          initialGenre = $(this).attr("firstChoice");
+          console.log(initialGenre);
+        });
+
+        $("#registerButton").on("click", function (event) {
+          let credentialsAreGood = false;
+          event.preventDefault();
+          console.log("CreateNew button pressed")
+          let register = {
+            email: $("#newUserEmail").val(),
+            password: $("#newUserPassword").val(),
+            quizGenre: initialGenre
+          }
+          console.log(register);
+          $("#firstStepNewAccount").modal('hide');
+          $.ajax("/api/register", {
+            type: "POST",
+            data: register
+          }).then(function (response) {
+            $("#firstStepNewAccount").modal('hide');
+            $("#createNewAccount").modal('hide');
+            $(".login-modal").append("<br><p style=color:green;>Account Created!  Please Login.</p>")
+          });
+        });
+
+        $("#loginButton").on("click", function (event) {
+          $("#error").removeClass("error");
+          let credentialsAreGood = false;
+          event.preventDefault();
+          console.log("Login button pressed")
+          let login = {
+            email: $("#userEmail").val(),
+            password: $("#userPassword").val()
+          }
+          console.log(login.email);
+          console.log(login.password);
+          //find userID using the above (ajax post/get for credentials), if successful
+
+          // FOR TESTING ONLY SO IT TAKES YOU TO THE NEXT PAGE:  DELETE IN PRODUCTION
+          credentialsAreGood = true;
+          // FOR TESTING ONLY SO IT TAKES YOU TO THE NEXT PAGE:  DELETE IN PRODUCTION
+
+          $.ajax("/api/login", {
+            type: "POST",
+            data: login
+          }).then(function (response) {
+            // associating the username and password with a userID done on the back-end
+            // need to be sent back the userID;
+            userID = response.userID;
+            credentialsAreGood = true;
+          });
+          if (credentialsAreGood) {
+            window.location.href = "/main";
+          }
+          else {
+            $(".login-modal").append("<br><p style=color:red; class='error'>Incorrect Login Information</p>")
+          }
+        });
+      }
+
+      function Songs() {
+        let count = 1;
+        console.log("songs script running");
+        var apiRoute;
+        if (choice === "recommend") {
+          apiRoute = "api/recommended-songs"
+          $("#yourChoice").text("You're currently viewing our list of recommend songs for you...")
         }
-      );
-    });
+        else {
+          apiRoute = "api/random-songs"
+          $("#yourChoice").text("Here's a list of 10 random songs...")
+        }
+        $(".changeButton").on("click", function () {
+          location.reload();
+        })
+        $.ajax({
+          url: apiRoute,
+          type: "GET"
+        }).then(function (response) {
+          console.log(response)
+          // if response is an array
+          var songNameArray = [];
+          var artistNameArray = [];
+          var genreArray = [];
+          var imageArray = [
+            "https://content.miamimusicweek.com/production/artist/86/image/open-uri20160119-21660-zbipof.jpeg"
+            ,
+            "https://images.complex.com/complex/image/upload/c_limit,dpr_auto,q_90,w_720/fl_lossy,pg_1/wypszhd0w447abiv9fws.jpg",
+            "https://d1rgjmn2wmqeif.cloudfront.net/r/g/141409.jpg",
+            "https://d1rgjmn2wmqeif.cloudfront.net/r/g/139635.jpg",
+            "https://i.ytimg.com/vi/9SquIypJXhg/maxresdefault.jpg",
+            "https://cdn.shopify.com/s/files/1/1381/1501/products/43749248_rfr_construction_caution_tape_ci_1024x1024.jpg?v=1468450750",
+            "https://cdn.shopify.com/s/files/1/1381/1501/products/43749248_rfr_construction_caution_tape_ci_1024x1024.jpg?v=1468450750",
+            "https://cdn.shopify.com/s/files/1/1381/1501/products/43749248_rfr_construction_caution_tape_ci_1024x1024.jpg?v=1468450750",
+            "https://cdn.shopify.com/s/files/1/1381/1501/products/43749248_rfr_construction_caution_tape_ci_1024x1024.jpg?v=1468450750",
+            "https://cdn.shopify.com/s/files/1/1381/1501/products/43749248_rfr_construction_caution_tape_ci_1024x1024.jpg?v=1468450750",
+          ];
 
-    $(".dislikeButton").on("click", function () {
-      $("#carouselExampleCaptions").carousel("next");
-    })
+          for (i = 0; i < response.length; i++) {
+            songNameArray.push(response[i].songName);
+            artistNameArray.push(response[i].artist);
+            genreArray.push(response[i].genre);
+            imageArray.push(response[i].imageArray)
+          }
+          // if response is an array
+
+          function makeInitialCarousel(song, artist, genre, img) {
+            console.log(img, song, artist, genre);
+            var imageID = img;
+            var songName = song;
+            var artistName = artist;
+            var songGenre = genre;
+
+            var carouselOuterDiv = $("<div class='carousel-item active'>");
+            var imgLink = $("<img class='d-block w-100 albumArt' alt='Album Art'>");
+            var carouselInnerDiv = $("<div class='carousel-caption d-none d-md-block'>");
+
+            var songNameJquery = $("<h5></h5>");
+            var artistNameJquery = $("<p></p>");
+            var songGenreJquery = $("<p></p>");
+
+            var likeButton = $("<button type='button' class='btn btn-success btn-lg likeButton'>Like</button>");
+            var dislikeButton = $("<button type='button' class='btn btn-danger btn-lg likeButton'>Dislike</button>");
+            var endDivs = $("</div></div>");
+
+            imgLink.attr("src", imageID);
+            songNameJquery.text(songName);
+            artistNameJquery.text(artistName);
+            songGenreJquery.text(songGenre);
+
+            $(".carousel-inner").append(carouselOuterDiv);
+            carouselOuterDiv.append(imgLink);
+            carouselOuterDiv.append(carouselInnerDiv);
+            // doing this to add/subtract from Genre Score
+            carouselInnerDiv.attr("genre", songGenre);
+            // doing this to add/subtract from Genre Score
+            carouselInnerDiv.append(songNameJquery);
+            carouselInnerDiv.append(artistNameJquery);
+            carouselInnerDiv.append(songGenreJquery);
+            carouselInnerDiv.append(likeButton);
+            carouselInnerDiv.append(dislikeButton);
+            carouselInnerDiv.append(endDivs);
+          }
+
+          function makeCarousel(song, artist, genre, img) {
+            console.log(img, song, artist, genre);
+            var imageID = img;
+            var songName = song;
+            var artistName = artist;
+            var songGenre = genre;
+
+            var carouselOuterDiv = $("<div class='carousel-item'>");
+            var imgLink = $("<img class='d-block w-100 albumArt' alt='Album Art'>");
+            var carouselInnerDiv = $("<div class='carousel-caption d-none d-md-block'>");
+
+            var songNameJquery = $("<h5></h5>");
+            var artistNameJquery = $("<p></p>");
+            var songGenreJquery = $("<p></p>");
+
+            var likeButton = $("<button type='button' class='btn btn-success btn-lg likeButton'>Like</button>");
+            var dislikeButton = $("<button type='button' class='btn btn-danger btn-lg dislikeButton'>Dislike</button>");
+            var endDivs = $("</div></div>");
+
+            imgLink.attr("src", imageID);
+            songNameJquery.text(songName);
+            artistNameJquery.text(artistName);
+            songGenreJquery.text(songGenre);
+
+            $(".carousel-inner").append(carouselOuterDiv);
+            carouselOuterDiv.append(imgLink);
+            carouselOuterDiv.append(carouselInnerDiv);
+            // doing this to add/subtract from Genre Score
+            carouselInnerDiv.attr("genre", songGenre);
+            // doing this to add/subtract from Genre Score
+            carouselInnerDiv.append(songNameJquery);
+            carouselInnerDiv.append(artistNameJquery);
+            carouselInnerDiv.append(songGenreJquery);
+            carouselInnerDiv.append(likeButton);
+            carouselInnerDiv.append(dislikeButton);
+            carouselInnerDiv.append(endDivs);
+          }
+
+          makeInitialCarousel(songNameArray[0], artistNameArray[0], genreArray[0], imageArray[0]);
+          for (i = 1; i < response.length; i++) {
+            makeCarousel(songNameArray[i], artistNameArray[i], genreArray[i], imageArray[i]);
+          }
+
+          $(".likeButton").on("click", function () {
+            var genre = $(this).parent().attr("genre");
+            console.log(genre);
+            var toBackEnd = {
+              genre: genre,
+              userID: userID,
+            }
+            if (count >= 10) {
+              $("#finishedModal").modal();
+            }
+            else {
+              // need to include userID so backend can properly associate the like to the user's row
+              // maybe this TBDshould be its own route for adding a like to the genre?
+              // TESTING ONLY - TAKE OUT IN PRODUCTION.  CANT DO THE .carousel("next") WITHOUT A SUCCESSFUL POST
+              $("#carouselExampleCaptions").carousel("next");
+              // TESTING ONLY - TAKE OUT IN PRODUCTION.  CANT DO THE .carousel("next") WITHOUT A SUCCESSFUL POST
+              count++;
+              $.ajax("/api/TBD-LIKE", {
+                type: "POST",
+                data: toBackEnd,
+                // sending the genre to the back so we can add "1" to the (genre)Like
+
+              }).then(function () {
+                console.log("trigger to next")
+                $("#carouselExampleCaptions").carousel("next");
+              })
+            }
+          })
+
+          $(".dislikeButton").on("click", function () {
+            var genre = $(this).parent().attr("genre");
+            console.log(genre);
+            var toBackEnd = {
+              genre: genre,
+              userID: userID,
+            }
+            if (count >= 10) {
+              $("#finishedModal").modal();
+            }
+            else {
+              // need to include userID so backend can properly associate the dislike to the user's row
+              // maybe this TBD should be its own route for adding a dislike to the genre?
+
+              // TESTING ONLY - TAKE OUT IN PRODUCTION.  CANT DO THE .carousel("next") WITHOUT A SUCCESSFUL POST
+              $("#carouselExampleCaptions").carousel("next");
+              // TESTING ONLY - TAKE OUT IN PRODUCTION.  CANT DO THE .carousel("next") WITHOUT A SUCCESSFUL POST
+              count++;
+              $.ajax("/api/TBD-DISLIKE", {
+                type: "POST",
+                data: toBackEnd,
+                // sending the genre to the back so we can add "1" to the (genre)Dislike
+              }).then(function () {
+                console.log("trigger to next")
+                $("#carouselExampleCaptions").carousel("next");
+              })
+            }
+          })
+
+          $(".2ndChangeButton").on("click", function () {
+            location.reload();
+          })
+        });
+      }
+
+      $(".IFWEDOFAVORITES-likeButton").on("click", function () {
+        var favoriteSongName = $(this)
+          .parent()
+          .attr("songName");
+        var artistOfFavSong = $(this)
+          .parent()
+          .attr("artistName");
+        var detailsOfFavSong = $(this)
+          .parent()
+          .attr("extraDetails");
+
+        //post to DB - favorites table
+
+        var newFavoriteSong = {
+          name: favoriteSongName,
+          artist: artistOfFavSong,
+          details: detailsOfFavSong
+        }
+        $("#carouselExampleCaptions").carousel("next");
+        $.ajax("/api/favsong", {
+          type: "POST",
+          data: newFavoriteSong
+        }).then(
+          function () {
+            console.log("added a new favorite song");
+            // Reload the page to get the updated list
+            // Scenario 1:  use Jquery to dynamically populate favorites list.  However this would still need a page refresh since
+            // we are getting data from the favorties last table
+            // Scenario 2:  have favorites be on another page- that still needs to be reloaded though and won't update if you
+            // have that page and the main page up at the same time 
+
+            // USE JQUERY TO RENDER- THESE SAME FAVORITE RESULTS SHOULD POPULATE ANYWAY (AND OVERWRITE THESE) WHEN YOU REFRESH THE PAGE
+            // location.reload();
+            //<li><span id="favSong1Name"><strong>Song Name:</strong></span>
+            //  <br>
+            //  <span id= "favSong1Artist"><strong>Artist: </strong></span>
+            //  <br>
+            //  <button class="btn btn-danger float-right delete">ｘ</button>
+            //</li>
+            //<br>
+
+            $(".local-render")
+              .append(
+                "<li><strong>Song Name: </strong>" + newFavoriteSong.name +
+                "<br> <strong> Artist Name: </strong>" + newFavoriteSong.artist + "<br> " +
+                "<button type='button' class='btn btn-danger float-right delete' data-toggle='popover' title='Feature not coded yet' data-content='Deleting favorites still to be coded in.'>ｘ</button> </li> <br>"
+              )
+          }
+        );
+      });
+    });
   </script>
 </body>
 
