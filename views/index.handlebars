@@ -4,7 +4,10 @@
     <div class="row">
       <div class="col-8 offset-2">
         <h1 id="songScreenTitle">{{msg}}</h1>
+        <br>
+        <h3 id="yourChoice"></h3>
         <h2 id="test">Let me know if you like this song!</h2>
+        <br>
 
         <div class="bd-example">
           <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel" data-interval="false">
@@ -14,22 +17,21 @@
               <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
             </ol>-->
             <div class="carousel-inner">
-
-            </div>
-            <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+           </div>
+            <!--<a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
               <span class="sr-only">Previous</span>
             </a>
             <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
               <span class="sr-only">Next</span>
-            </a>
+            </a>-->
           </div>
         </div>
         <br>
+        <button type="button" class="btn btn-success changeButton">Change Module</button>
 
-
-        <h3>Your favorites:</h3>
+        <h3 style="visibility:hidden">Your favorites:</h3>
 
         <ul id="example-list" class="list-group-item local-render" style="visibility:hidden">
 
@@ -48,7 +50,6 @@
         </ul>
       </div>
 
-
     </div>
 
     <div class="modal" id="selectionModal" tabindex="-1" role="dialog">
@@ -60,6 +61,22 @@
           <div class="modal-body">
             <button type="button" class="btn btn-success selectButton" choice="recommend">Recommend a Song for me!</button>
             <button type="button" class="btn btn-success selectButton" choice="random">Give me Random Songs!</button>
+          </div>
+          <div class="modal-footer">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="finishedModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Module Complete!</h5>
+          </div>
+          <div class="modal-body">
+            <button type="button" class="btn btn-success changeButton">Change Module</button>
           </div>
           <div class="modal-footer">
             
