@@ -20,7 +20,6 @@ module.exports = function(app) {
     });
   });
 
-
   // Get one random song from our database.
   app.get("/api/random-song", function(req, res) {
     findRandomSong(null, function(randomSong) {
