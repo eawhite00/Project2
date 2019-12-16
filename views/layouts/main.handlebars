@@ -53,6 +53,11 @@
 
         case "/main":
           //code here
+          $('#songScreenTitle').attr("style", "opacity: 0");
+          $('#test').attr("style", "opacity: 0");
+          $('#yourChoice').attr("style", "opacity: 0");
+          $('.bd-example').attr("style", "opacity: 0");
+          $('.changeButton').attr("style", "opacity: 0");
           makeAChoice();
           break;
       }
@@ -62,6 +67,17 @@
         $(".selectButton").on("click", function () {
           console.log($(this).attr("choice"));
           $('#selectionModal').modal('hide');
+          $('#songScreenTitle').attr("style", "opacity: 1");
+          $('#test').attr("style", "opacity: 1");
+          $('#yourChoice').attr("style", "opacity: 1");
+          $('.bd-example').attr("style", "opacity: 1");
+          $('.changeButton').attr("style", "opacity: 1");
+          $("#songScreenTitle").css("-webkit-animation", "fadein 1s")
+          $('#test').css("-webkit-animation", "fadein 1s")
+          $('#yourChoice').css("-webkit-animation", "fadein 1s")
+          $('.bd-example').css("-webkit-animation", "fadein 2s")
+          $('.changeButton').css("-webkit-animation", "fadein 4s")
+
           if ($(this).attr("choice") === "recommend") {
             //pass in the choice of recommend to Songs(); so that we can call the right API get path
             choice = "recommend";
