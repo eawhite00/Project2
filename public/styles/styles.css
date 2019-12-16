@@ -9,15 +9,21 @@
 }
 
 #login {
-  position:relative
+  position:relative;
+  
+}
+
+span {
+  overflow: hidden;
 }
 
 .test1 {
   text-align:center;
+  height: 25rem;
 }
 
 #songScreenTitle {
-  font-family: 'Permanent Marker', cursive;
+  font-family: 'Kaushan Script', cursive;
   font-size: 5rem;
   color: green
 }
@@ -25,7 +31,14 @@
 #mainTitle  {
   font-family: 'Kaushan Script', cursive;
   font-size: 5rem;
-  color: green
+  color: green;
+  bottom: 325px;
+  position: relative;
+}
+
+.firstButtons {
+  position: relative;
+  bottom: 325px;
 }
 
 .test1 .musicNote {
