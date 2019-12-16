@@ -1,15 +1,18 @@
-// For this to work:
-// - Create a table named 'songs' that holds all the songs in our database.
-// - Create a table named 'users' that holds usernames and passwords of our users.
-
+// NEEDED ROUTES
+// Post to User when creating users **DONE**
+// Get for a single random song **DONE**
+// Get for a single recommended song. Read the user table to determine what your most liked genre is and display a new song with that genre. **DONE**
+// Post to User? when the user likes or dislikes a song and join that with the ratings table
+// Get for all your liked songs
+var Sequelize = require("sequelize");
 var db = require("../models");
 
 module.exports = function(app) {
-  // Get all favorite songs where the userId in the database matches the userId param. Include a join from the 'users' table so we have a grab on the foreign/primary keys.
-  app.get("/api/favorites/:userId", function(req, res) {
+  // Get all liked songs where the userid in the database matches the userid param. Include a join from the 'users' table so we have a grab on the foreign/primary keys.
+  app.get("/api/favorites/:userid", function(req, res) {
     db.Song.findAll({
       where: {
-        userId: req.params.userId
+        userid: req.params.userid
       },
       include: [db.users]
     }).then(function(dbFavsResult) {
@@ -17,19 +20,46 @@ module.exports = function(app) {
     });
   });
 
-  // Get 10 random songs from our database and list them out in JSON format. I'm thinking we can then format this data as an array and loop through it on the front-end and display them as questions to the user.
-  app.get("/api/random-songs", function(req, res) {
-    db.Song.findAll({ order: db.Sequelize.literal("rand()"), limit: 10 }).then(
-      function(randomSongs) {
-        console.log(randomSongs);
-        res.json(randomSongs);
-      }
-    );
+
+  // Get one random song from our database.
+  app.get("/api/random-song", function(req, res) {
+    findRandomSong(null, function(randomSong) {
+      res.json(randomSong);
+    });
+    // db.Song.findOne({ order: "rand()" }).then(function(randomSong) {
+    //   console.log(randomSong);
+    //   res.json(randomSong);
+    // });
+  });
+
+  // Get for a recommended song based on data for the user.
+  app.get("/api/recommended-song/:id", function(req, res) {
+    db.User.findOne({
+      where: {
+        userid: req.params.id
+      },
+      attributes: [
+        "rockLike",
+        "rockDislike",
+        "rapLike",
+        "rapDislike",
+        "popLike",
+        "popDislike",
+        "countryLike",
+        "countryDislike",
+        "altLike",
+        "altDislike"
+      ]
+    }).then(function(userIdResult) {
+      // var favoriteGenre = 'Beth's favorite genre function'(userIdResult);
+      findRandomSong(favoriteGenre, function(randomSong) {
+        res.json(randomSong);
+      });
+    });
   });
 
   // Post method for creating a login and storing the information in our database.
-  // ** Still need to create the model for 'users'. **
-  app.post("/api/login", function(req, res) {
+  app.post("/", function(req, res) {
     db.User.create({
       username: req.body.username,
       password: req.body.password
@@ -39,13 +69,26 @@ module.exports = function(app) {
     });
   });
 
-  // Delete a favorite song by id
+  // Delete a liked song by id
   app.delete("/api/favorites/:id", function(req, res) {
     db.Song.destroy({ where: { id: req.params.id } }).then(function(deletion) {
       res.json(deletion);
     });
   });
 };
+
+// Reusable function to find a random song or a recommended song depending on if the 'where' parameter    is populated.
+function findRandomSong(genre, cb) {
+  var whereOption = genre ? { genre: genre } : {};
+
+  db.Song.findOne({
+    order: Sequelize.literal("rand()"),
+    where: whereOption
+  }).then(function(randomSong) {
+    console.log(randomSong);
+    cb(randomSong);
+  });
+}
 
 // *NOT SURE IF THIS IS NEEDED **
 // app.post("/api/favsong", function(req, res) {
