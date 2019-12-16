@@ -16,7 +16,13 @@
   text-align:center;
 }
 
-#mainTitle, #songScreenTitle {
+#songScreenTitle {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 5rem;
+  color: green
+}
+
+#mainTitle  {
   font-family: 'Kaushan Script', cursive;
   font-size: 5rem;
   color: green
@@ -150,4 +156,16 @@
   100% {
     opacity: 1;
   }
+}
+
+@-webkit-keyframes fadeInSlide {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(-200px, 0px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translate(0px, 0px);
+  }
+
 }
