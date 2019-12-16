@@ -78,22 +78,31 @@
       }
 
       function loginOrRegister() {
+        var initialGenre;
+
+        $(".initialChoice").on("click", function (event) {
+          initialGenre = $(this).attr("firstChoice");
+          console.log(initialGenre);
+        });
+
         $("#registerButton").on("click", function (event) {
           let credentialsAreGood = false;
           event.preventDefault();
           console.log("CreateNew button pressed")
           let register = {
             email: $("#newUserEmail").val(),
-            password: $("#newUserPassword").val()
+            password: $("#newUserPassword").val(),
+            quizGenre: initialGenre
           }
-          console.log(register.email);
-          console.log(register.password);
-
+          console.log(register);
+          $("#firstStepNewAccount").modal('hide');
           $.ajax("/api/register", {
             type: "POST",
             data: register
           }).then(function (response) {
-            (".login-modal").append("<br><p style=color:blue;>Account Created!  Please Login.</p>")
+            $("#firstStepNewAccount").modal('hide');
+            $("#createNewAccount").modal('hide');
+            $(".login-modal").append("<br><p style=color:green;>Account Created!  Please Login.</p>")
           });
         });
 
@@ -136,7 +145,7 @@
         let count = 1;
         console.log("songs script running");
         var apiRoute;
-        if (choice === "recommended") {
+        if (choice === "recommend") {
           apiRoute = "api/recommended-songs"
           $("#yourChoice").text("You're currently viewing our list of recommend songs for you...")
         }
@@ -144,6 +153,9 @@
           apiRoute = "api/random-songs"
           $("#yourChoice").text("Here's a list of 10 random songs...")
         }
+        $(".changeButton").on("click", function () {
+          location.reload();
+        })
         $.ajax({
           url: apiRoute,
           type: "GET"

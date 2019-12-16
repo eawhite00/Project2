@@ -37,13 +37,38 @@
         <!-- Button trigger modal -->
         <br><br><br><br><br><br><br><br><br><br>
         <p id="mainTitle">Spotify Me!</p><br><br>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createNewAccount">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#firstStepNewAccount">
             Create New Account
         </button>
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">
             Login
         </button>
 
+        <div class="modal fade" id="firstStepNewAccount" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Welcome to Spotifind Me! To help this app
+                            personalize your experience, tell me which one of these genres you
+                            like:</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <button class="btn btn-outline-success initialChoice" firstChoice="rock" data-toggle="modal" data-target="#createNewAccount">Rock</button>
+                        <button class="btn btn-outline-success initialChoice" firstChoice="rap" data-toggle="modal" data-target="#createNewAccount">Rap</button>
+                        <button class="btn btn-outline-success initialChoice" firstChoice="pop" data-toggle="modal" data-target="#createNewAccount">Pop</button>
+                        <button class="btn btn-outline-success initialChoice" firstChoice="country" data-toggle="modal" data-target="#createNewAccount">Country</button>
+                        <button class="btn btn-outline-success initialChoice" firstChoice="alternative" data-toggle="modal" data-target="#createNewAccount">Alternative</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="modal fade" id="createNewAccount" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -69,10 +94,6 @@
                                 <label for="exampleInputPassword1">Password</label>
                                 <input type="password" class="form-control" id="newUserPassword" placeholder="Password">
                             </div>
-                            <br>
-                            <!--<h4>To help personalize for you, tell me which one of these genres you like:</h4>
-                            CHANGE TO DROPDOWN NOT BUTTONS
-                            <br>-->
                             <button type="submit" class="btn btn-success" id="registerButton">Register</button>
                         </form>
                     </div>
@@ -99,7 +120,8 @@
                                 <label for="exampleInputEmail1">Email address</label>
                                 <input type="email" class="form-control" id="userEmail" aria-describedby="emailHelp"
                                     placeholder="Enter email">
-                                <small id="emailHelp" class="form-text text-muted">Existing Users, Please Enter your Email</small>
+                                <small id="emailHelp" class="form-text text-muted">Existing Users, Please Enter your
+                                    Email</small>
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputPassword1">Password</label>
