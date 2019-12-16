@@ -163,7 +163,8 @@
         console.log("songs script running");
         var apiRoute;
         if (choice === "recommend") {
-          apiRoute = "api/recommended-songs"
+          // Jeff & Kensen to verify (need to do api/recommended-songs/:id)
+          apiRoute = "api/recommended-songs" + userID
           $("#yourChoice").text("You're currently viewing our list of recommend songs for you...")
         }
         else {
