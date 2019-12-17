@@ -41,6 +41,12 @@
     //           </div>
     $(document).ready(function () {
 
+      //$(document).on("click", function () {
+      //  var likeLine = $("<span style='background-color:green; position: relative; z-index: 500;'></span>")
+      //  $("#test").append(likeLine);
+      //  likeLine.css("-webkit-animation", "likeline 2s")
+      //});
+
       var windowLoc = $(location).attr('pathname');
       // need this so that the appropriate JS fires when the right window is up. 
 
@@ -172,7 +178,7 @@
         $('.iframe').attr("style", "opacity: 0");
         $('.iframe').attr("style", "opacity: 1");
         $('.iframe').css("-webkit-animation", "fadein 1s")
-        
+
         console.log("songs script running, user's choice is " + choice);
         var apiRoute;
         if (choice === "recommend") {
