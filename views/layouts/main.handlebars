@@ -45,6 +45,7 @@
       // need this so that the appropriate JS fires when the right window is up. 
 
       var choice;
+      var userID;
 
       switch (windowLoc) {
         case "/":
@@ -60,6 +61,7 @@
           $('.bd-example').attr("style", "opacity: 0");
           $('.changeButton').attr("style", "opacity: 0");
           $('.logOutButton').attr("style", "opacity: 0");
+          $('.iframe').attr("style", "opacity: 0");
           makeAChoice();
           break;
       }
@@ -67,7 +69,7 @@
       function makeAChoice() {
         $("#selectionModal").modal({ backdrop: 'static', keyboard: false })
         $(".selectButton").on("click", function () {
-          
+
           $('#selectionModal').modal('hide');
           $('#songScreenTitle').attr("style", "opacity: 1");
           $('#test').attr("style", "opacity: 1");
@@ -75,13 +77,14 @@
           $('.bd-example').attr("style", "opacity: 1");
           $('.changeButton').attr("style", "opacity: 1");
           $('.logOutButton').attr("style", "opacity: 1");
+          $('.iframe').attr("style", "opacity: 1");
           $("#songScreenTitle").css("-webkit-animation", "fadein 1s")
           $('#test').css("-webkit-animation", "fadeInSlide 3s")
           $('#yourChoice').css("-webkit-animation", "fadein 1s")
           $('.bd-example').css("-webkit-animation", "fadein 2s")
-          $('.changeButton').css("-webkit-animation", "fadein 4s")
-          $('.logOutButton').css("-webkit-animation", "fadein 4s")
-          
+          $('.changeButton').css("-webkit-animation", "fadein 2s")
+          $('.logOutButton').css("-webkit-animation", "fadein 2s")
+          $('.iframe').css("-webkit-animation", "fadein 1s")
 
           if ($(this).attr("choice") === "recommend") {
             //pass in the choice of recommend to Songs(); so that we can call the right API get path
@@ -91,9 +94,6 @@
             //pass in the choice of random to Songs(); so that we can call the right API get path
             choice = "random";
           }
-          // FOR TESTING ONLY - DELETE IN PRODUCTION
-          userID = "test"
-          // FOR TESTING ONLY - DELETE IN PRODUCTION
           Songs();
         })
       }
@@ -164,12 +164,20 @@
 
       function Songs() {
         let count = 1;
+        //visual workaround only so that there is always a "space" that keep the logout buttons etc where they are during song change
+        var emptyDiv = $("<div id='emptyDiv' style='width:730px; height:512px; background-color:black;'</div>")
+        //visual workaround only so that there is always a "space" that keep the logout buttons etc where they are during song change
         $(".carousel-inner").empty();
+        $(".carousel-inner").append(emptyDiv);
+        $('.iframe').attr("style", "opacity: 0");
+        $('.iframe').attr("style", "opacity: 1");
+        $('.iframe').css("-webkit-animation", "fadein 1s")
+        
         console.log("songs script running, user's choice is " + choice);
         var apiRoute;
         if (choice === "recommend") {
           // Jeff & Kensen to verify (need to do api/recommended-songs/:id)
-          apiRoute = "api/recommended-songs" + userID
+          apiRoute = "api/recommended-songs/:" + userID
           $("#yourChoice").text("You're currently viewing our list of recommend songs for you...")
         }
         else {
@@ -192,28 +200,27 @@
           var songNameArray = [];
           var artistNameArray = [];
           var genreArray = [];
-          var imageArray = [];
+          var idArray = [];
 
           songNameArray.push(response.songName);
           artistNameArray.push(response.artist);
           genreArray.push(response.genre);
-          imageArray.push(response.imageArray)
+          idArray.push(response.id)
 
-
-          function makeCarousel(song, artist, genre, img) {
-            console.log(song, artist, genre);
+          function makeCarousel(song, artist, genre, id) {
+            console.log(song, artist, genre, id);
             if (count === 1) {
               active = "active";
             }
             else {
               active = "";
             }
-            var imageID = img;
+            //var imageID = img;
             var songName = song;
             var artistName = artist;
             var songGenre = genre;
-            var trackID = "6EJiVf7U0p1BBfs0qqeb1f'"
-            //carouselOuterDiv.append(imgLink);
+            var trackID = "5Ohxk2dO5COHF1krpoPigN'"
+            // trackID should be dynamically populated by id instead of this string once spotify api is setup
             var carouselOuterDiv = $("<div class='carousel-item " + active + "''>");
             var imgLink = $("<img class='d-block w-100 albumArt' alt='Album Art'>");
             var carouselInnerDiv = $("<div class='carousel-caption d-none d-md-block'>");
@@ -221,22 +228,24 @@
             //<iframe src="https://open.spotify.com/embed/track/6EJiVf7U0p1BBfs0qqeb1f" 
             // width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
-            var iframe = $("<iframe src='https://open.spotify.com/embed/track/" + trackID +
+            var iframe = $("<iframe class='iframe' src='https://open.spotify.com/embed/track/" + trackID +
               "width='300' height='380' frameborder='0' allowtransparency='true' allow='encrypted-media'></iframe>")
 
             var songNameJquery = $("<h5></h5>");
             var artistNameJquery = $("<p></p>");
             var songGenreJquery = $("<p></p>");
-            var whatGenre = $("<button type='button' id='whatButton' class='btn btn-secondary' data-toggle='tooltip' data-placement='bottom' title="+ genre + ">What Genre is this?</button>")
+            var whatGenre = $("<button type='button' id='whatButton' class='btn btn-secondary' data-toggle='tooltip' data-placement='bottom' title=" + genre + "!" + ">What Genre is this?</button>")
             var likeButton = $("<button type='button' class='btn btn-success btn-lg likeButton'>Like</button>");
             var dislikeButton = $("<button type='button' class='btn btn-danger btn-lg dislikeButton'>Dislike</button>");
             var endDivs = $("</div></div>");
 
-            imgLink.attr("src", imageID);
-            songNameJquery.text(songName);
-            artistNameJquery.text(artistName);
-            songGenreJquery.text(songGenre);
+            //imgLink.attr("src", imageID);
 
+            //songNameJquery.text(songName);
+            //artistNameJquery.text(artistName);
+            //songGenreJquery.text(songGenre);
+
+            $(".carousel-inner").empty();
             $(".carousel-inner").append(carouselOuterDiv);
             //carouselOuterDiv.append(imgLink);
             carouselOuterDiv.append(iframe);
@@ -252,10 +261,10 @@
             carouselInnerDiv.append(whatGenre);
             carouselInnerDiv.append(endDivs);
 
-            $('[data-toggle="tooltip"]').tooltip(); 
+            $('[data-toggle="tooltip"]').tooltip();
           }
 
-          makeCarousel(songNameArray[count - 1], artistNameArray[count - 1], genreArray[count - 1], imageArray[count - 1]);
+          makeCarousel(songNameArray[count - 1], artistNameArray[count - 1], genreArray[count - 1], idArray[count - 1]);
 
           $(".likeButton").on("click", function () {
             var genre = $(this).parent().attr("genre");
@@ -267,9 +276,6 @@
             // need to include userID so backend can properly associate the like to the user's row
             // maybe this TBDshould be its own route for adding a like to the genre?
             count++;
-            // TESTING ONLY - TAKE OUT IN PRODUCTION.  CANT DO THE .carousel("next") WITHOUT A SUCCESSFUL POST
-            //$("#carouselExampleCaptions").carousel("next");
-            // TESTING ONLY - TAKE OUT IN PRODUCTION.  CANT DO THE .carousel("next") WITHOUT A SUCCESSFUL POST
             Songs();
             $.ajax("/api/TBD-LIKE", {
               type: "POST",
@@ -293,9 +299,6 @@
             // need to include userID so backend can properly associate the dislike to the user's row
             // maybe this TBD should be its own route for adding a dislike to the genre?
             count++;
-            // TESTING ONLY - TAKE OUT IN PRODUCTION.  CANT DO THE .carousel("next") WITHOUT A SUCCESSFUL POST
-            //$("#carouselExampleCaptions").carousel("next");
-            // TESTING ONLY - TAKE OUT IN PRODUCTION.  CANT DO THE .carousel("next") WITHOUT A SUCCESSFUL POST
             Songs();
             $.ajax("/api/TBD-DISLIKE", {
               type: "POST",
