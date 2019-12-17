@@ -59,6 +59,7 @@
           $('#yourChoice').attr("style", "opacity: 0");
           $('.bd-example').attr("style", "opacity: 0");
           $('.changeButton').attr("style", "opacity: 0");
+          $('.logOutButton').attr("style", "opacity: 0");
           makeAChoice();
           break;
       }
@@ -73,11 +74,14 @@
           $('#yourChoice').attr("style", "opacity: 1");
           $('.bd-example').attr("style", "opacity: 1");
           $('.changeButton').attr("style", "opacity: 1");
+          $('.logOutButton').attr("style", "opacity: 1");
           $("#songScreenTitle").css("-webkit-animation", "fadein 1s")
           $('#test').css("-webkit-animation", "fadeInSlide 3s")
           $('#yourChoice').css("-webkit-animation", "fadein 1s")
           $('.bd-example').css("-webkit-animation", "fadein 2s")
           $('.changeButton').css("-webkit-animation", "fadein 4s")
+          $('.logOutButton').css("-webkit-animation", "fadein 4s")
+          
 
           if ($(this).attr("choice") === "recommend") {
             //pass in the choice of recommend to Songs(); so that we can call the right API get path
@@ -175,6 +179,10 @@
         $(".changeButton").on("click", function () {
           location.reload();
         })
+        $(".logOutButton").on("click", function () {
+          userID = "";
+          window.location.href = "/";
+        })
         $.ajax({
           url: apiRoute,
           type: "GET"
@@ -219,8 +227,7 @@
             var songNameJquery = $("<h5></h5>");
             var artistNameJquery = $("<p></p>");
             var songGenreJquery = $("<p></p>");
-            var whatGenre = $("<button type='button' class='btn btn-secondary' data-toggle='tooltip' data-placement='bottom' title='What genre is this?'>" +
-              genre + "</button>")
+            var whatGenre = $("<button type='button' id='whatButton' class='btn btn-secondary' data-toggle='tooltip' data-placement='bottom' title="+ genre + ">What Genre is this?</button>")
             var likeButton = $("<button type='button' class='btn btn-success btn-lg likeButton'>Like</button>");
             var dislikeButton = $("<button type='button' class='btn btn-danger btn-lg dislikeButton'>Dislike</button>");
             var endDivs = $("</div></div>");
@@ -244,6 +251,8 @@
             carouselInnerDiv.append(dislikeButton);
             carouselInnerDiv.append(whatGenre);
             carouselInnerDiv.append(endDivs);
+
+            $('[data-toggle="tooltip"]').tooltip(); 
           }
 
           makeCarousel(songNameArray[count - 1], artistNameArray[count - 1], genreArray[count - 1], imageArray[count - 1]);
@@ -259,7 +268,7 @@
             // maybe this TBDshould be its own route for adding a like to the genre?
             count++;
             // TESTING ONLY - TAKE OUT IN PRODUCTION.  CANT DO THE .carousel("next") WITHOUT A SUCCESSFUL POST
-            $("#carouselExampleCaptions").carousel("next");
+            //$("#carouselExampleCaptions").carousel("next");
             // TESTING ONLY - TAKE OUT IN PRODUCTION.  CANT DO THE .carousel("next") WITHOUT A SUCCESSFUL POST
             Songs();
             $.ajax("/api/TBD-LIKE", {
@@ -285,7 +294,7 @@
             // maybe this TBD should be its own route for adding a dislike to the genre?
             count++;
             // TESTING ONLY - TAKE OUT IN PRODUCTION.  CANT DO THE .carousel("next") WITHOUT A SUCCESSFUL POST
-            $("#carouselExampleCaptions").carousel("next");
+            //$("#carouselExampleCaptions").carousel("next");
             // TESTING ONLY - TAKE OUT IN PRODUCTION.  CANT DO THE .carousel("next") WITHOUT A SUCCESSFUL POST
             Songs();
             $.ajax("/api/TBD-DISLIKE", {

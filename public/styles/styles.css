@@ -13,24 +13,34 @@
   
 }
 
+#whatButton {
+  position: relative;
+  right: 15%;
+}
+
 .likeButton {
   /*margin-left: 30px;
   margin-right: 130px;*/
   position:relative;
-  right: 40%;
-  bottom:8rem;
+  right: 23%;
+  bottom:10rem;
 }
 
 .dislikeButton {
   /*margin-left: 190px;*/
   position:relative;
-  left: 43%;
-  bottom:8rem;
+  left: 60%;
+  bottom:10rem;
 }
 
 .carousel-item {
   background-color: black;
   height:30rem;
+}
+
+.logOutButton {
+  position: relative;
+  float: right;
 }
 
 iframe {
