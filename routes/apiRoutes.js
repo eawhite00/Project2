@@ -51,7 +51,7 @@ module.exports = function(app) {
         "altDislike"
       ]
     }).then(function(userIdResult) {
-      // var favoriteGenre = 'Beth's favorite genre function'(userIdResult);
+      var favoriteGenre = genrePrompt(userIdResult);
       findRandomSong(favoriteGenre, function(randomSong) {
         res.json(randomSong);
       });

@@ -1,7 +1,7 @@
 // fetch user data
 
-function genrePrompt() {
-  var user = IMPORTUSERDATA;
+function genrePrompt(userIdResult) {
+  var user = userIdResult;
 
   var storageA;
   var storageC;
@@ -59,7 +59,7 @@ function genrePrompt() {
     //Find the genre name of the highest percentage holder
     for (i = 0; i < holder.length; i++) {
       if (checkList[0] === holder[i][0]) {
-        winnerName = holder[i][1];
+        return holder[i][1];
       }
     }
 
