@@ -13,6 +13,59 @@
   
 }
 
+#whatButton {
+  position: relative;
+  right: 15%;
+}
+
+.likeButton {
+  /*margin-left: 30px;
+  margin-right: 130px;*/
+  position:relative;
+  right: 23%;
+  bottom:12rem;
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=bottom] .arrow::before, .tooltip.bs-tooltip-bottom .arrow::before {
+  position: absolute;
+  left: 10px;
+  border-bottom-color: goldenrod;
+}
+
+.tooltip-inner {
+  position: relative;
+  left:10px;
+  color: white !important;
+  text-align: center;
+  background-color:goldenrod !important;
+  border-radius: .25rem;
+}
+
+.dislikeButton {
+  /*margin-left: 190px;*/
+  position:relative;
+  left: 60%;
+  bottom:12rem;
+}
+
+.carousel-item {
+  background-color: black;
+  height:32rem;
+}
+
+.logOutButton {
+  position: relative;
+  float: right;
+}
+
+iframe {
+  z-index: 100;
+  margin-left: 30%;
+  margin-right: 30%;
+  position: relative;
+  top: 5%;
+}
+
 span {
   overflow: hidden;
 }
@@ -39,6 +92,13 @@ span {
 .firstButtons {
   position: relative;
   bottom: 325px;
+}
+
+hr {
+  border: 1px solid black !important;
+  
+  -webkit-animation: line 2s;
+  animation-delay: 2s;
 }
 
 .test1 .musicNote {
@@ -163,6 +223,66 @@ span {
 }
 
 @-webkit-keyframes fadein {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(-200px, 0px);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes likelinevertical {
+  0% {
+    top: 100px;
+    height: 100px;
+    width: 10px;
+    opacity: 1;
+  }
+  55% {
+    opacity: 0;
+  }
+  100% {
+    top: 0px;
+    height: 0px;
+    width: 10px;
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes likelinehorizontal {
+  0% {
+    top: 145px;
+    height: 10px;
+    -webkit-transform: scale(1.0);
+    width: 100px;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    height: 10px;
+    -webkit-transform: scale(0);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes dislikelinehorizontal {
+  0% {
+    bottom: 145px;
+    height: 10px;
+    -webkit-transform: scale(1.0);
+    width: 100px;
+    opacity: 1;
+  }
+  100% {
+    bottom: 0px;
+    height: 10px;
+    -webkit-transform: scale(0);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes fadeinNoSlide {
   0% {
     opacity: 0;
   }

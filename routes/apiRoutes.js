@@ -8,6 +8,14 @@
 var Sequelize = require("sequelize");
 var db = require("../models");
 
+require("dotenv").config();
+
+var keys = require("../keys");
+
+var Spotify = require("node-spotify-api");
+
+var spotify = new Spotify(keys.spotify);
+
 module.exports = function(app) {
   // Get all liked songs where the userid in the database matches the userid param. Include a join from the 'users' table so we have a grab on the foreign/primary keys.
   app.get("/api/favorites/:id", function(req, res) {
@@ -88,14 +96,30 @@ module.exports = function(app) {
   // Get one random song from our database.
   app.get("/api/random-song", function(req, res) {
     findRandomSong(null, function(randomSong) {
-      res.json(randomSong);
+      spotify.search({ type: "track", query: randomSong.songName }, function(
+        err,
+        data
+      ) {
+        if (err) {
+          return console.log("Error occurred: " + err);
+        }
+        var spotifyPath = data.tracks.items;
+        console.log(spotifyPath[0].id);
+        var finalSong = {
+          song: randomSong.songName,
+          artist: randomSong.artist,
+          genre: randomSong.genre,
+          id: spotifyPath[0].id
+        };
+        //res.json(finalSong);
+        res.json(finalSong);
+      });
+      // db.Song.findOne({ order: "rand()" }).then(function(randomSong) {
+      //   console.log(randomSong);
+      //   res.json(randomSong);
+      // });
     });
-    // db.Song.findOne({ order: "rand()" }).then(function(randomSong) {
-    //   console.log(randomSong);
-    //   res.json(randomSong);
-    // });
   });
-
   // Get for a recommended song based on data for the user.
   app.get("/api/recommended-song/:id", function(req, res) {
     db.User.findOne({
