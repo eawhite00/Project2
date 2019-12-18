@@ -149,16 +149,16 @@ function findRandomSong(genre, cb) {
 
 function setupLike(columnName) {
   switch (columnName) {
-  case "rockLike":
+    case "rockLike":
       return Sequelize.literal("rockLike + 1");
-  case "rapLike":
-    return Sequelize.literal("rapLike + 1");
-  case "alternativeLike":
-    return Sequelize.literal("alternativeLike + 1");
-  case "countryLike":
-    return Sequelize.literal("countryLike + 1");
-  case "popLike":
-    return Sequelize.literal("popLike + 1");
+    case "rapLike":
+      return Sequelize.literal("rapLike + 1");
+    case "alternativeLike":
+      return Sequelize.literal("alternativeLike + 1");
+    case "countryLike":
+      return Sequelize.literal("countryLike + 1");
+    case "popLike":
+      return Sequelize.literal("popLike + 1");
   }
 }
 
