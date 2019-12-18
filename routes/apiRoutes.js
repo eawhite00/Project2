@@ -10,11 +10,16 @@ var db = require("../models");
 
 //require("dotenv").config();
 
-var keys = require("../keys");
+//var keys = require("../keys");
+
+var keys = {
+  id: "2eecd783aacc4761818529ac1433a35e",
+  secret: "a73eb004d49344f199327df1da7dca08"
+};
 
 var Spotify = require("node-spotify-api");
 
-var spotify = new Spotify(keys.spotify);
+var spotify = new Spotify(keys);
 
 module.exports = function(app) {
   // Get all liked songs where the userid in the database matches the userid param. Include a join from the 'users' table so we have a grab on the foreign/primary keys.
