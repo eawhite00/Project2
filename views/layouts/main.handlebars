@@ -125,7 +125,7 @@
               genre: initialGenre,
               id: JSON.stringify(response.id)
             }
-            $.ajax("api/start/like", {
+            $.ajax("/api/start/like", {
               type: "PUT",
               data: forPut
             }).then(function (response) {
