@@ -4,22 +4,55 @@
 // Get for a single recommended song. Read the user table to determine what your most liked genre is and display a new song with that genre. **DONE**
 // Post to User? when the user likes or dislikes a song and join that with the ratings table
 // Get for all your liked songs
+// POST for registering
+// GET request for the spotify search
 var Sequelize = require("sequelize");
 var db = require("../models");
 
 module.exports = function(app) {
   // Get all liked songs where the userid in the database matches the userid param. Include a join from the 'users' table so we have a grab on the foreign/primary keys.
-  app.get("/api/favorites/:userid", function(req, res) {
+  app.get("/api/favorites/:id", function(req, res) {
     db.Song.findAll({
       where: {
-        userid: req.params.userid
+        id: req.params.id
       },
-      include: [db.users]
+      include: [db.User]
     }).then(function(dbFavsResult) {
       res.json(dbFavsResult);
     });
   });
 
+  //Post to User when a song is liked
+  app.put("/api/decision/like", function(req, res) {
+    var columnName = req.body.genre + "Like";
+    var data = {};
+    console.log(req.body);
+    // console.log(columnName);
+    data[columnName] = setupLike(columnName);
+
+    db.User.update(data, { where: { id: req.body.id } }).then(function(
+      dbUpdateResult
+    ) {
+      console.log(dbUpdateResult);
+      res.json(dbUpdateResult);
+    });
+  });
+
+  //Post to User when a song is disliked
+  app.put("/api/decision/dislike", function(req, res) {
+    var columnName = req.body.genre + "Dislike";
+    var data = {};
+    console.log(req.body);
+    // console.log(columnName);
+    data[columnName] = setupDislike(columnName);
+
+    db.User.update(data, { where: { id: req.body.id } }).then(function(
+      dbUpdateResult
+    ) {
+      console.log(dbUpdateResult);
+      res.json(dbUpdateResult);
+    });
+  });
 
   // Get one random song from our database.
   app.get("/api/random-song", function(req, res) {
@@ -36,7 +69,7 @@ module.exports = function(app) {
   app.get("/api/recommended-song/:id", function(req, res) {
     db.User.findOne({
       where: {
-        userid: req.params.id
+        id: req.params.id
       },
       attributes: [
         "rockLike",
@@ -63,9 +96,9 @@ module.exports = function(app) {
     db.User.create({
       username: req.body.username,
       password: req.body.password
-    }).then(function(username) {
-      console.log(username);
-      res.json(username);
+    }).then(function(newUser) {
+      console.log(newUser);
+      res.json(newUser);
     });
   });
 
@@ -88,6 +121,36 @@ function findRandomSong(genre, cb) {
     console.log(randomSong);
     cb(randomSong);
   });
+}
+
+function setupLike(columnName) {
+  switch (columnName) {
+  case "rockLike":
+    return Sequelize.literal("rockLike + 1");
+  case "rapLike":
+    return Sequelize.literal("rapLike + 1");
+  case "alternativeLike":
+    return Sequelize.literal("alternativeLike + 1");
+  case "countryLike":
+    return Sequelize.literal("countryLike + 1");
+  case "popLike":
+    return Sequelize.literal("popLike + 1");
+  }
+}
+
+function setupDislike(columnName) {
+  switch (columnName) {
+  case "rockDislike":
+    return Sequelize.literal("rockDislike + 1");
+  case "rapDislike":
+    return Sequelize.literal("rapDislike + 1");
+  case "alternativeDislike":
+    return Sequelize.literal("alternativeDislike + 1");
+  case "countryDislike":
+    return Sequelize.literal("countryDislike + 1");
+  case "popDislike":
+    return Sequelize.literal("popDislike + 1");
+  }
 }
 
 // *NOT SURE IF THIS IS NEEDED **

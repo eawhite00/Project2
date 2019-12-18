@@ -44,11 +44,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       defaultValue: 0
     },
-    altLike: {
+    alternativeLike: {
       type: DataTypes.INTEGER,
       defaultValue: 0
     },
-    altDislike: {
+    alternativeDislike: {
       type: DataTypes.INTEGER,
       defaultValue: 0
     }
