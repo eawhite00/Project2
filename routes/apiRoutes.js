@@ -2,9 +2,8 @@
 // Post to User when creating users **DONE**
 // Get for a single random song **DONE**
 // Get for a single recommended song. Read the user table to determine what your most liked genre is and display a new song with that genre. **DONE**
-// Post to User? when the user likes or dislikes a song and join that with the ratings table
+// Post to User? when the user likes or dislikes a song **DONE**
 // Get for all your liked songs
-// POST for registering
 // GET request for the spotify search
 var Sequelize = require("sequelize");
 var db = require("../models");
@@ -30,6 +29,30 @@ module.exports = function(app) {
     // console.log(columnName);
     data[columnName] = setupLike(columnName);
 
+    db.User.update(data, { where: { id: req.body.id } })
+      .then(
+        db.Rating.create({
+          UserId: req.body.id,
+          value: 1,
+          songName: req.body.song,
+          genre: req.body.genre,
+          artist: req.body.artist
+        })
+      )
+      .then(function(dbUpdateResult) {
+        console.log(dbUpdateResult);
+        res.json(dbUpdateResult);
+      });
+  });
+
+  // Update the user with a +1 to their favorite genre when they create their account
+  app.put("/api/start/like", function(req, res) {
+    var columnName = req.body.genre + "Like";
+    var data = {};
+    console.log(req.body);
+    // console.log(columnName);
+    data[columnName] = setupLike(columnName);
+
     db.User.update(data, { where: { id: req.body.id } }).then(function(
       dbUpdateResult
     ) {
@@ -46,12 +69,20 @@ module.exports = function(app) {
     // console.log(columnName);
     data[columnName] = setupDislike(columnName);
 
-    db.User.update(data, { where: { id: req.body.id } }).then(function(
-      dbUpdateResult
-    ) {
-      console.log(dbUpdateResult);
-      res.json(dbUpdateResult);
-    });
+    db.User.update(data, { where: { id: req.body.id } })
+      .then(
+        db.Rating.create({
+          UserId: req.body.id,
+          value: 0,
+          songName: req.body.song,
+          genre: req.body.genre,
+          artist: req.body.artist
+        })
+      )
+      .then(function(dbUpdateResult) {
+        console.log(dbUpdateResult);
+        res.json(dbUpdateResult);
+      });
   });
 
   // Get one random song from our database.
@@ -94,7 +125,7 @@ module.exports = function(app) {
   // Post method for creating a login and storing the information in our database.
   app.post("/", function(req, res) {
     db.User.create({
-      username: req.body.username,
+      username: req.body.email,
       password: req.body.password
     }).then(function(newUser) {
       console.log(newUser);
@@ -125,31 +156,31 @@ function findRandomSong(genre, cb) {
 
 function setupLike(columnName) {
   switch (columnName) {
-  case "rockLike":
-    return Sequelize.literal("rockLike + 1");
-  case "rapLike":
-    return Sequelize.literal("rapLike + 1");
-  case "alternativeLike":
-    return Sequelize.literal("alternativeLike + 1");
-  case "countryLike":
-    return Sequelize.literal("countryLike + 1");
-  case "popLike":
-    return Sequelize.literal("popLike + 1");
+    case "rockLike":
+      return Sequelize.literal("rockLike + 1");
+    case "rapLike":
+      return Sequelize.literal("rapLike + 1");
+    case "alternativeLike":
+      return Sequelize.literal("alternativeLike + 1");
+    case "countryLike":
+      return Sequelize.literal("countryLike + 1");
+    case "popLike":
+      return Sequelize.literal("popLike + 1");
   }
 }
 
 function setupDislike(columnName) {
   switch (columnName) {
-  case "rockDislike":
-    return Sequelize.literal("rockDislike + 1");
-  case "rapDislike":
-    return Sequelize.literal("rapDislike + 1");
-  case "alternativeDislike":
-    return Sequelize.literal("alternativeDislike + 1");
-  case "countryDislike":
-    return Sequelize.literal("countryDislike + 1");
-  case "popDislike":
-    return Sequelize.literal("popDislike + 1");
+    case "rockDislike":
+      return Sequelize.literal("rockDislike + 1");
+    case "rapDislike":
+      return Sequelize.literal("rapDislike + 1");
+    case "alternativeDislike":
+      return Sequelize.literal("alternativeDislike + 1");
+    case "countryDislike":
+      return Sequelize.literal("countryDislike + 1");
+    case "popDislike":
+      return Sequelize.literal("popDislike + 1");
   }
 }
 
