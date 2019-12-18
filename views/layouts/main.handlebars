@@ -49,7 +49,7 @@
 
       switch (windowLoc) {
         case "/":
-          
+
           loginOrRegister();
           break;
 
@@ -251,7 +251,9 @@
             $('.carousel-inner').find('*').not('.likeline').remove();
             $(".carousel-inner").append(carouselOuterDiv);
             //carouselOuterDiv.append(imgLink);
-            carouselOuterDiv.append(iframe);
+
+
+
             carouselOuterDiv.append(carouselInnerDiv);
             // doing this to add/subtract from Genre Score
             carouselInnerDiv.attr("genre", songGenre);
@@ -263,6 +265,11 @@
             carouselInnerDiv.append(dislikeButton);
             carouselInnerDiv.append(whatGenre);
             carouselInnerDiv.append(endDivs);
+            function delay() {
+              carouselOuterDiv.append(iframe);
+            }
+
+            setTimeout(delay, 300);
 
             $('[data-toggle="tooltip"]').tooltip();
           }
