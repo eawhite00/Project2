@@ -2,6 +2,27 @@ module.exports = function(sequelize, DataTypes) {
   var Rating = sequelize.define("Rating", {
     value: {
       type: DataTypes.BOOLEAN
+    },
+    songName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1]
+      }
+    },
+    genre: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1]
+      }
+    },
+    artist: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1]
+      }
     }
   });
 
@@ -14,19 +35,7 @@ module.exports = function(sequelize, DataTypes) {
   };
 
   Rating.associate = function(models) {
-    // We're saying that a Rating should belong to an Author
-    // A Rating can't be created without an Author due to the foreign key constraint
     Rating.belongsTo(models.User, {
-      foreignKey: {
-        allowNull: false
-      }
-    });
-  };
-
-  Rating.associate = function(models) {
-    // We're saying that a Rating should belong to an Author
-    // A Rating can't be created without an Author due to the foreign key constraint
-    Rating.belongsTo(models.Song, {
       foreignKey: {
         allowNull: false
       }
