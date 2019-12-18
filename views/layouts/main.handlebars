@@ -125,18 +125,21 @@
               genre: initialGenre,
               id: JSON.stringify(response.id)
             }
-            $.ajax("/api/start/like", {
+            $.ajax("api/start/like", {
               type: "PUT",
               data: forPut
             }).then(function (response) {
-              $(".login-modal").append("<br><p style='color:green';>Account Created!  Please Login.</p>")
+              $(".create-modal").append("<br><p id='createConfirm' style='color:green';>Account Created!  Please Login.</p>");
             });
           });
-
         });
 
+        $(".firstButtons").on("click", function(event) {
+          $("#createConfirm").remove();
+          $("#loginFail").remove();
+        })
+
         $("#loginButton").on("click", function (event) {
-          $("#error").removeClass("error");
           let credentialsAreGood = false;
           event.preventDefault();
           console.log("Login button pressed")
@@ -165,7 +168,7 @@
             window.location.href = "/main";
           }
           else {
-            $(".login-modal").append("<br><p style=color:red; class='error'>Incorrect Login Information</p>")
+            $(".login-modal").append("<br><p id='loginFail' style=color:red; class='error'>Incorrect Login Information</p>")
           }
         });
       }
