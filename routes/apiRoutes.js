@@ -118,7 +118,7 @@ module.exports = function(app) {
   // Post method for creating a login and storing the information in our database.
   app.post("/", function(req, res) {
     db.User.create({
-      username: req.body.username,
+      username: req.body.email,
       password: req.body.password
     }).then(function(newUser) {
       console.log(newUser);
@@ -149,31 +149,31 @@ function findRandomSong(genre, cb) {
 
 function setupLike(columnName) {
   switch (columnName) {
-      case "rockLike":
-    return Sequelize.literal("rockLike + 1");
-    case "rapLike":
-      return Sequelize.literal("rapLike + 1");
-    case "alternativeLike":
-      return Sequelize.literal("alternativeLike + 1");
-    case "countryLike":
-      return Sequelize.literal("countryLike + 1");
-    case "popLike":
-      return Sequelize.literal("popLike + 1");
+  case "rockLike":
+      return Sequelize.literal("rockLike + 1");
+  case "rapLike":
+    return Sequelize.literal("rapLike + 1");
+  case "alternativeLike":
+    return Sequelize.literal("alternativeLike + 1");
+  case "countryLike":
+    return Sequelize.literal("countryLike + 1");
+  case "popLike":
+    return Sequelize.literal("popLike + 1");
   }
 }
 
 function setupDislike(columnName) {
   switch (columnName) {
-    case "rockDislike":
-      return Sequelize.literal("rockDislike + 1");
-    case "rapDislike":
-      return Sequelize.literal("rapDislike + 1");
-    case "alternativeDislike":
-      return Sequelize.literal("alternativeDislike + 1");
-    case "countryDislike":
-      return Sequelize.literal("countryDislike + 1");
-    case "popDislike":
-      return Sequelize.literal("popDislike + 1");
+  case "rockDislike":
+    return Sequelize.literal("rockDislike + 1");
+  case "rapDislike":
+    return Sequelize.literal("rapDislike + 1");
+  case "alternativeDislike":
+    return Sequelize.literal("alternativeDislike + 1");
+  case "countryDislike":
+    return Sequelize.literal("countryDislike + 1");
+  case "popDislike":
+    return Sequelize.literal("popDislike + 1");
   }
 }
 

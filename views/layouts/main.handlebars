@@ -114,18 +114,25 @@
           let register = {
             email: $("#newUserEmail").val(),
             password: $("#newUserPassword").val(),
-            quizGenre: initialGenre
           }
-          console.log(register);
           $("#firstStepNewAccount").modal('hide');
-          $.ajax("/api/register", {
+          $.ajax("/", {
             type: "POST",
             data: register
           }).then(function (response) {
-            $("#firstStepNewAccount").modal('hide');
-            $("#createNewAccount").modal('hide');
-            $(".login-modal").append("<br><p style=color:green;>Account Created!  Please Login.</p>")
+            console.log(JSON.stringify(response.id));
+            var forPut = {
+              genre: initialGenre,
+              id: JSON.stringify(response.id);
+            }
+            $.ajax("/api/decision/like", {
+              type: "PUT",
+              data: forPut
+            }).then(function (response) {
+              $(".login-modal").append("<br><p style='color:green';>Account Created!  Please Login.</p>")
+            });
           });
+
         });
 
         $("#loginButton").on("click", function (event) {
@@ -221,7 +228,7 @@
             var songName = song;
             var artistName = artist;
             var songGenre = genre;
-            var trackID = "6EJiVf7U0p1BBfs0qqeb1f";
+            var trackID = id + "'";
             console.log(trackID);
             // trackID should be dynamically populated by id instead of this string once spotify api is setup
             var carouselOuterDiv = $("<div class='carousel-item " + active + "''>");
@@ -256,6 +263,7 @@
             carouselOuterDiv.append(carouselInnerDiv);
             // doing this to add/subtract from Genre Score
             carouselInnerDiv.attr("genre", songGenre);
+            carouselInnerDiv.attr("songName", songName);
             // doing this to add/subtract from Genre Score
             carouselInnerDiv.append(songNameJquery);
             carouselInnerDiv.append(artistNameJquery);
@@ -270,7 +278,7 @@
             $('.likeButton').attr("style", "opacity: 0");
             $('.dislikeButton').attr("style", "opacity: 0");
             $('#whatButton').attr("style", "opacity: 0");
-            
+
             $('.likeButton').attr("style", "opacity: 1");
             $('.dislikeButton').attr("style", "opacity: 1");
             $('#whatButton').attr("style", "opacity: 1");
@@ -288,8 +296,10 @@
 
           $(".likeButton").on("click", function () {
             var genre = $(this).parent().attr("genre");
+            var songName = $(this).parent().attr("songName");
             console.log(genre);
             var toBackEnd = {
+              song: songName;
               genre: genre,
               id: id,
             }
@@ -317,9 +327,11 @@
           })
 
           $(".dislikeButton").on("click", function () {
-            var genre = $(this).parent().attr("genre");
+            var genre = $(this).parent().attr("genre")
+            var songName = $(this).parent().attr("songName");
             console.log(genre);
             var toBackEnd = {
+              song: songName;
               genre: genre,
               id: id,
             }
