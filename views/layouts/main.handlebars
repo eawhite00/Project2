@@ -45,7 +45,7 @@
       // need this so that the appropriate JS fires when the right window is up. 
 
       var choice;
-      var userID;
+      var id;
 
       switch (windowLoc) {
         case "/":
@@ -55,7 +55,7 @@
 
         case "/main":
           //code here
-          userID = userID;
+          id = id;
           $('#songScreenTitle').attr("style", "opacity: 0");
           $('#test').attr("style", "opacity: 0");
           $('#yourChoice').attr("style", "opacity: 0");
@@ -139,7 +139,7 @@
           }
           console.log(login.email);
           console.log(login.password);
-          //find userID using the above (ajax post/get for credentials), if successful
+          //find id using the above (ajax post/get for credentials), if successful
 
           // FOR TESTING ONLY SO IT TAKES YOU TO THE NEXT PAGE:  DELETE IN PRODUCTION
           credentialsAreGood = true;
@@ -149,9 +149,9 @@
             type: "POST",
             data: login
           }).then(function (response) {
-            // associating the username and password with a userID done on the back-end
-            // need to be sent back the userID;
-            userID = response.userID;
+            // associating the username and password with a id done on the back-end
+            // need to be sent back the id;
+            id = response.id;
             credentialsAreGood = true;
           });
           if (credentialsAreGood) {
@@ -179,7 +179,7 @@
         var apiRoute;
         if (choice === "recommend") {
           // Jeff & Kensen to verify (need to do api/recommended-songs/:id)
-          apiRoute = "api/recommended-songs/" + userID
+          apiRoute = "api/recommended-songs/" + id
           $("#yourChoice").text("You're currently viewing our list of recommend songs for you...")
         }
         else {
@@ -190,7 +190,7 @@
           location.reload();
         })
         $(".logOutButton").on("click", function () {
-          userID = "";
+          id = "";
           window.location.href = "/";
         })
         $.ajax({
@@ -204,10 +204,10 @@
           var genreArray = [];
           var idArray = [];
 
-          songNameArray.push(response.songName);
+          songNameArray.push(response.song);
           artistNameArray.push(response.artist);
           genreArray.push(response.genre);
-          idArray.push(response.id)
+          idArray.push(response.id);
 
           function makeCarousel(song, artist, genre, id) {
             console.log(song, artist, genre, id);
@@ -221,7 +221,8 @@
             var songName = song;
             var artistName = artist;
             var songGenre = genre;
-            var trackID = "5Ohxk2dO5COHF1krpoPigN'"
+            var trackID = "6EJiVf7U0p1BBfs0qqeb1f";
+            console.log(trackID);
             // trackID should be dynamically populated by id instead of this string once spotify api is setup
             var carouselOuterDiv = $("<div class='carousel-item " + active + "''>");
             var imgLink = $("<img class='d-block w-100 albumArt' alt='Album Art'>");
@@ -290,9 +291,9 @@
             console.log(genre);
             var toBackEnd = {
               genre: genre,
-              userID: userID,
+              id: id,
             }
-            // need to include userID so backend can properly associate the like to the user's row
+            // need to include id so backend can properly associate the like to the user's row
             // maybe this TBDshould be its own route for adding a like to the genre?
             var likeLineVertical = $("<span class='likeline'; style='background-color:green; position: absolute; z-index: 500; left: 115px;'></span>");
             var likeLineHorizontal = $("<span class='likeline'; style='background-color:green; position: absolute; z-index: 500; left: 70px; '></span>");
@@ -320,9 +321,9 @@
             console.log(genre);
             var toBackEnd = {
               genre: genre,
-              userID: userID,
+              id: id,
             }
-            // need to include userID so backend can properly associate the dislike to the user's row
+            // need to include id so backend can properly associate the dislike to the user's row
             // maybe this TBD should be its own route for adding a dislike to the genre?
             var dislikeLine = $("<span class='likeline'; style='background-color:red; position: absolute; z-index: 500; left: 575px; '></span>");
             $(".carousel-inner").append(dislikeLine);
