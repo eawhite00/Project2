@@ -235,11 +235,11 @@ hr {
 @-webkit-keyframes likeline {
   0% {
     height: 231px;
-    width: 2px;
+    width: 10px;
   }
   100% {
     height: 0px;
-    width: 2px;
+    width: 10px;
   }
 }
 
