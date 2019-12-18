@@ -252,8 +252,6 @@
             $(".carousel-inner").append(carouselOuterDiv);
             //carouselOuterDiv.append(imgLink);
 
-
-
             carouselOuterDiv.append(carouselInnerDiv);
             // doing this to add/subtract from Genre Score
             carouselInnerDiv.attr("genre", songGenre);
@@ -268,6 +266,17 @@
             function delay() {
               carouselOuterDiv.append(iframe);
             }
+            $('.likeButton').attr("style", "opacity: 0");
+            $('.dislikeButton').attr("style", "opacity: 0");
+            $('#whatButton').attr("style", "opacity: 0");
+            
+            $('.likeButton').attr("style", "opacity: 1");
+            $('.dislikeButton').attr("style", "opacity: 1");
+            $('#whatButton').attr("style", "opacity: 1");
+
+            $('.likeButton').css("-webkit-animation", "fadeinNoSlide 1s");
+            $('.dislikeButton').css("-webkit-animation", "fadeinNoSlide 1s");
+            $('#whatButton').css("-webkit-animation", "fadeinNoSlide 1s");
 
             setTimeout(delay, 300);
 
