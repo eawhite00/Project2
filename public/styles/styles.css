@@ -232,14 +232,53 @@ hr {
   }
 }
 
-@-webkit-keyframes likeline {
+@-webkit-keyframes likelinevertical {
   0% {
-    height: 231px;
+    top: 100px;
+    height: 100px;
     width: 10px;
+    opacity: 1;
+  }
+  55% {
+    opacity: 0;
   }
   100% {
+    top: 0px;
     height: 0px;
     width: 10px;
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes likelinehorizontal {
+  0% {
+    top: 145px;
+    height: 10px;
+    -webkit-transform: scale(1.0);
+    width: 100px;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    height: 10px;
+    -webkit-transform: scale(0);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes dislikelinehorizontal {
+  0% {
+    bottom: 145px;
+    height: 10px;
+    -webkit-transform: scale(1.0);
+    width: 100px;
+    opacity: 1;
+  }
+  100% {
+    bottom: 0px;
+    height: 10px;
+    -webkit-transform: scale(0);
+    opacity: 0;
   }
 }
 

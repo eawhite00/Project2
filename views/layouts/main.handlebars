@@ -41,12 +41,6 @@
     //           </div>
     $(document).ready(function () {
 
-      //$(document).on("click", function () {
-      //  var likeLine = $("<span style='background-color:green; position: absolute; z-index: 500; left: 115px;'></span>")
-      //  $(".carousel-inner").prepend(likeLine);
-      //  likeLine.css("-webkit-animation", "likeline 1s")
-      //});
-
       var windowLoc = $(location).attr('pathname');
       // need this so that the appropriate JS fires when the right window is up. 
 
@@ -55,12 +49,13 @@
 
       switch (windowLoc) {
         case "/":
-          let userID;
+          
           loginOrRegister();
           break;
 
         case "/main":
           //code here
+          userID = userID;
           $('#songScreenTitle').attr("style", "opacity: 0");
           $('#test').attr("style", "opacity: 0");
           $('#yourChoice').attr("style", "opacity: 0");
@@ -173,7 +168,8 @@
         //visual workaround only so that there is always a "space" that keep the logout buttons etc where they are during song change
         var emptyDiv = $("<div id='emptyDiv' style='width:730px; height:512px; background-color:black;'</div>")
         //visual workaround only so that there is always a "space" that keep the logout buttons etc where they are during song change
-        $(".carousel-inner").empty();
+        //$(".carousel-inner").empty();
+        $('.carousel-inner').find('*').not('.likeline').remove();
         $(".carousel-inner").append(emptyDiv);
         $('.iframe').attr("style", "opacity: 0");
         $('.iframe').attr("style", "opacity: 1");
@@ -183,7 +179,7 @@
         var apiRoute;
         if (choice === "recommend") {
           // Jeff & Kensen to verify (need to do api/recommended-songs/:id)
-          apiRoute = "api/recommended-songs/:" + userID
+          apiRoute = "api/recommended-songs/" + userID
           $("#yourChoice").text("You're currently viewing our list of recommend songs for you...")
         }
         else {
@@ -251,7 +247,8 @@
             //artistNameJquery.text(artistName);
             //songGenreJquery.text(songGenre);
 
-            $(".carousel-inner").empty();
+            //$(".carousel-inner").empty();
+            $('.carousel-inner').find('*').not('.likeline').remove();
             $(".carousel-inner").append(carouselOuterDiv);
             //carouselOuterDiv.append(imgLink);
             carouselOuterDiv.append(iframe);
@@ -281,6 +278,13 @@
             }
             // need to include userID so backend can properly associate the like to the user's row
             // maybe this TBDshould be its own route for adding a like to the genre?
+            var likeLineVertical = $("<span class='likeline'; style='background-color:green; position: absolute; z-index: 500; left: 115px;'></span>");
+            var likeLineHorizontal = $("<span class='likeline'; style='background-color:green; position: absolute; z-index: 500; left: 70px; '></span>");
+            $(".carousel-inner").append(likeLineVertical);
+            $(".carousel-inner").append(likeLineHorizontal);
+            likeLineVertical.css("-webkit-animation", "likelinevertical 1.5s");
+            likeLineHorizontal.css("-webkit-animation", "likelinehorizontal 1.5s");
+
             count++;
             Songs();
             $.ajax("/api/TBD-LIKE", {
@@ -304,6 +308,10 @@
             }
             // need to include userID so backend can properly associate the dislike to the user's row
             // maybe this TBD should be its own route for adding a dislike to the genre?
+            var dislikeLine = $("<span class='likeline'; style='background-color:red; position: absolute; z-index: 500; left: 575px; '></span>");
+            $(".carousel-inner").append(dislikeLine);
+            dislikeLine.css("-webkit-animation", "dislikelinehorizontal 1.5s");
+
             count++;
             Songs();
             $.ajax("/api/TBD-DISLIKE", {
