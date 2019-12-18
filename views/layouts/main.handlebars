@@ -123,7 +123,7 @@
             console.log(JSON.stringify(response.id));
             var forPut = {
               genre: initialGenre,
-              id: JSON.stringify(response.id);
+              id: JSON.stringify(response.id)
             }
             $.ajax("/api/start/like", {
               type: "PUT",
@@ -149,7 +149,7 @@
           //find id using the above (ajax post/get for credentials), if successful
 
           // FOR TESTING ONLY SO IT TAKES YOU TO THE NEXT PAGE:  DELETE IN PRODUCTION
-          credentialsAreGood = true;
+          //credentialsAreGood = true;
           // FOR TESTING ONLY SO IT TAKES YOU TO THE NEXT PAGE:  DELETE IN PRODUCTION
 
           $.ajax("/api/login", {
@@ -299,7 +299,7 @@
             var songName = $(this).parent().attr("songName");
             console.log(genre);
             var toBackEnd = {
-              song: songName;
+              song: songName,
               genre: genre,
               id: id,
             }
@@ -331,7 +331,7 @@
             var songName = $(this).parent().attr("songName");
             console.log(genre);
             var toBackEnd = {
-              song: songName;
+              song: songName,
               genre: genre,
               id: id,
             }
