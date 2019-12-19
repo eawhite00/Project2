@@ -12,14 +12,12 @@ var db = require("../models");
 
 // var keys = require("../keys");
 
-var keys = {
-  id: "2eecd783aacc4761818529ac1433a35e",
-  secret: "a73eb004d49344f199327df1da7dca08",
-};
-
 var Spotify = require("node-spotify-api");
 
-var spotify = new Spotify(keys);
+var spotify = new Spotify({
+  id: "2eecd783aacc4761818529ac1433a35e",
+  secret: "a73eb004d49344f199327df1da7dca08"
+});
 
 var songPicker = require("../scripts/genreSorter");
 
