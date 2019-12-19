@@ -96,24 +96,25 @@ module.exports = function(app) {
   // Get one random song from our database.
   app.get("/api/random-song", function(req, res) {
     findRandomSong(null, function(randomSong) {
-      spotify.search({ type: "track", query: randomSong.songName }, function(
-        err,
-        data
-      ) {
-        if (err) {
-          return console.log("Error occurred: " + err);
-        }
-        var spotifyPath = data.tracks.items;
-        console.log(spotifyPath[0].id);
-        var finalSong = {
-          song: randomSong.songName,
-          artist: randomSong.artist,
-          genre: randomSong.genre,
-          id: spotifyPath[0].id
-        };
-        //res.json(finalSong);
-        res.json(finalSong);
-      });
+      // spotify.search({ type: "track", query: randomSong.songName }, function(
+      //   err,
+      //   data
+      // ) {
+      //   if (err) {
+      //     return console.log("Error occurred: " + err);
+      //   }
+      //   var spotifyPath = data.tracks.items;
+      //   console.log(spotifyPath[0].id);
+      //   var finalSong = {
+      //     song: randomSong.songName,
+      //     artist: randomSong.artist,
+      //     genre: randomSong.genre,
+      //     id: spotifyPath[0].id
+      //   };
+      //   //res.json(finalSong);
+      //   res.json(finalSong);
+      // });
+      res.json(randomSong);
       // db.Song.findOne({ order: "rand()" }).then(function(randomSong) {
       //   console.log(randomSong);
       //   res.json(randomSong);
