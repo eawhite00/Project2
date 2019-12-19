@@ -12,7 +12,7 @@ var db = require("../models");
 
 // var keys = require("../keys");
 
-console.log("Please help us!");
+console.error("Please help us!");
 
 var Spotify = require("node-spotify-api");
 
