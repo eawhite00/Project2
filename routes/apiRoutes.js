@@ -8,13 +8,18 @@
 var Sequelize = require("sequelize");
 var db = require("../models");
 
-require("dotenv").config();
+// require("dotenv").config();
 
-var keys = require("../keys");
+// var keys = require("../keys");
+
+var keys = {
+  id: "2eecd783aacc4761818529ac1433a35e",
+  secret: "a73eb004d49344f199327df1da7dca08",
+};
 
 var Spotify = require("node-spotify-api");
 
-var spotify = new Spotify(keys.spotify);
+var spotify = new Spotify(keys);
 
 var songPicker = require("../scripts/genreSorter");
 
