@@ -39,13 +39,13 @@
     //              <button type="button" class="btn btn-danger btn-lg dislikeButton">Dislike</button>
     //            </div>
     //           </div>
-    $(document).ready(function () {
 
+    $(document).ready(function () {
       var windowLoc = $(location).attr('pathname');
       // need this so that the appropriate JS fires when the right window is up. 
 
       var choice;
-      var id;
+      //var id;
 
       switch (windowLoc) {
         case "/":
@@ -54,8 +54,8 @@
           break;
 
         case "/main":
-          //code here
-          id = id;
+          // this is already undefined when we get here
+          id = localStorage.getItem("id");
           console.log(id);
           $('#songScreenTitle').attr("style", "opacity: 0");
           $('#test').attr("style", "opacity: 0");
@@ -135,7 +135,7 @@
           });
         });
 
-        $(".firstButtons").on("click", function(event) {
+        $(".firstButtons").on("click", function (event) {
           $("#createConfirm").remove();
           $("#loginFail").remove();
         })
@@ -152,25 +152,26 @@
           console.log(login.password);
           //find id using the above (ajax post/get for credentials), if successful
 
-          // FOR TESTING ONLY SO IT TAKES YOU TO THE NEXT PAGE:  DELETE IN PRODUCTION
-          //credentialsAreGood = true;
-          // FOR TESTING ONLY SO IT TAKES YOU TO THE NEXT PAGE:  DELETE IN PRODUCTION
-
           $.ajax("/api/login", {
             type: "POST",
             data: login
           }).then(function (response) {
             // associating the username and password with a id done on the back-end
             // need to be sent back the id;
-            id = response.id;
+            localStorage.setItem("id", response.id);
             credentialsAreGood = true;
+            console.log(localStorage.getItem("id"));
+            function delay() {
+              if (credentialsAreGood) {
+                window.location.href = "/main";
+              }
+              else {
+                $(".login-modal").append("<br><p id='loginFail' style=color:red; class='error'>Incorrect Login Information</p>")
+              }
+            }
+            setTimeout(delay, 2000);
           });
-          if (credentialsAreGood) {
-            window.location.href = "/main";
-          }
-          else {
-            $(".login-modal").append("<br><p id='loginFail' style=color:red; class='error'>Incorrect Login Information</p>")
-          }
+
         });
       }
 
@@ -190,7 +191,7 @@
         var apiRoute;
         if (choice === "recommend") {
           // Jeff & Kensen to verify (need to do api/recommended-songs/:id)
-          apiRoute = "api/recommended-songs/" + id
+          apiRoute = "api/recommended-song/" + id
           $("#yourChoice").text("You're currently viewing our list of recommend songs for you...")
         }
         else {
@@ -268,6 +269,7 @@
             // doing this to add/subtract from Genre Score
             carouselInnerDiv.attr("genre", songGenre);
             carouselInnerDiv.attr("songName", songName);
+            carouselInnerDiv.attr("artistName", artistName);
             // doing this to add/subtract from Genre Score
             carouselInnerDiv.append(songNameJquery);
             carouselInnerDiv.append(artistNameJquery);
@@ -301,10 +303,12 @@
           $(".likeButton").on("click", function () {
             var genre = $(this).parent().attr("genre");
             var songName = $(this).parent().attr("songName");
+            var artistName = $(this).parent().attr("artistName");
             console.log(genre);
             var toBackEnd = {
               song: songName,
               genre: genre,
+              artist: artistName,
               id: id,
             }
             // need to include id so backend can properly associate the like to the user's row
@@ -318,25 +322,27 @@
 
             count++;
             Songs();
-            $.ajax("/api/TBD-LIKE", {
-              type: "POST",
+            $.ajax("/api/decision/like", {
+              type: "PUT",
               data: toBackEnd,
               // sending the genre to the back so we can add "1" to the (genre)Like
             }).then(function () {
-              console.log("trigger to next")
-              $("#carouselExampleCaptions").carousel("next");
+              //console.log("trigger to next")
+              //$("#carouselExampleCaptions").carousel("next");
               Songs();
             })
 
           })
 
           $(".dislikeButton").on("click", function () {
-            var genre = $(this).parent().attr("genre")
+            var genre = $(this).parent().attr("genre");
             var songName = $(this).parent().attr("songName");
+            var artistName = $(this).parent().attr("artistName");
             console.log(genre);
             var toBackEnd = {
               song: songName,
               genre: genre,
+              artist: artistName,
               id: id,
             }
             // need to include id so backend can properly associate the dislike to the user's row
@@ -347,13 +353,13 @@
 
             count++;
             Songs();
-            $.ajax("/api/TBD-DISLIKE", {
-              type: "POST",
+            $.ajax("/api/decision/dislike", {
+              type: "PUT",
               data: toBackEnd,
               // sending the genre to the back so we can add "1" to the (genre)Dislike
             }).then(function () {
-              console.log("trigger to next")
-              $("#carouselExampleCaptions").carousel("next");
+              //console.log("trigger to next")
+              //$("#carouselExampleCaptions").carousel("next");
               Songs();
             })
           })

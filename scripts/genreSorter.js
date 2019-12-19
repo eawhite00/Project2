@@ -1,7 +1,8 @@
 // fetch user data
 
-function genrePrompt(userIdResult) {
+var genrePrompt = function(userIdResult) {
   var user = userIdResult;
+  console.log("within genresorter" + userIdResult);
 
   var storageA;
   var storageC;
@@ -31,7 +32,7 @@ function genrePrompt(userIdResult) {
   countryRate = [percentage, "Country"];
 
   // Score Alternative
-  ratingStore(user.altLike, user.altDislike, altRate);
+  ratingStore(user.alternativeLike, user.alternativeDislike, altRate);
   altRate = [percentage, "Alternative"];
 
   // Display current scores
@@ -59,6 +60,7 @@ function genrePrompt(userIdResult) {
     //Find the genre name of the highest percentage holder
     for (i = 0; i < holder.length; i++) {
       if (checkList[0] === holder[i][0]) {
+        console.log("***** HOLDER I I IS " + holder[i][1]);
         return holder[i][1];
       }
     }
@@ -106,4 +108,6 @@ function genrePrompt(userIdResult) {
     console.log("Country like rating is: " + countryRate[0] + "%");
     console.log("Alternative like rating is: " + altRate[0] + "%");
   }
-}
+};
+
+exports.genrePrompt = genrePrompt;

@@ -16,6 +16,8 @@ var Spotify = require("node-spotify-api");
 
 var spotify = new Spotify(keys.spotify);
 
+var songPicker = require("../scripts/genreSorter");
+
 module.exports = function(app) {
   // Get all liked songs where the userid in the database matches the userid param. Include a join from the 'users' table so we have a grab on the foreign/primary keys.
   app.get("/api/favorites/:id", function(req, res) {
@@ -50,11 +52,12 @@ module.exports = function(app) {
 
   //Post to User when a song is liked
   app.put("/api/decision/like", function(req, res) {
-    var columnName = req.body.genre + "Like";
+    var columnName = req.body.genre.toLowerCase() + "Like";
     var data = {};
-    console.log(req.body);
-    // console.log(columnName);
+    //console.log(req.body);
+    console.log(columnName);
     data[columnName] = setupLike(columnName);
+    console.log(data[columnName]);
     db.User.update(data, { where: { id: req.body.id } })
       .then(
         db.Rating.create({
@@ -89,7 +92,7 @@ module.exports = function(app) {
 
   //Post to User when a song is disliked
   app.put("/api/decision/dislike", function(req, res) {
-    var columnName = req.body.genre + "Dislike";
+    var columnName = req.body.genre.toLowerCase() + "Dislike";
     var data = {};
     console.log(req.body);
     // console.log(columnName);
@@ -140,6 +143,7 @@ module.exports = function(app) {
   });
   // Get for a recommended song based on data for the user.
   app.get("/api/recommended-song/:id", function(req, res) {
+    console.log("req.params.id " + req.params.id);
     db.User.findOne({
       where: {
         id: req.params.id
@@ -153,11 +157,12 @@ module.exports = function(app) {
         "popDislike",
         "countryLike",
         "countryDislike",
-        "altLike",
-        "altDislike"
+        "alternativeLike",
+        "alternativeDislike"
       ]
     }).then(function(userIdResult) {
-      var favoriteGenre = genrePrompt(userIdResult);
+      var favoriteGenre = songPicker.genrePrompt(userIdResult);
+      console.log(favoriteGenre);
       findRandomSong(favoriteGenre, function(randomSong) {
         spotify.search({ type: "track", query: randomSong.songName }, function(
           err,
