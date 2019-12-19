@@ -8,13 +8,20 @@
 var Sequelize = require("sequelize");
 var db = require("../models");
 
-require("dotenv").config();
+// require("dotenv").config();
 
-var keys = require("../keys");
+// var keys = require("../keys");
+
+console.error("Please help us!");
 
 var Spotify = require("node-spotify-api");
 
-var spotify = new Spotify(keys.spotify);
+var spotify = new Spotify({
+  id: process.env.SPOTIFY_ID,
+  secret: process.env.SPOTIFY_SECRET
+});
+
+var songPicker = require("../scripts/genreSorter");
 
 module.exports = function(app) {
   // Get all liked songs where the userid in the database matches the userid param. Include a join from the 'users' table so we have a grab on the foreign/primary keys.
@@ -50,11 +57,12 @@ module.exports = function(app) {
 
   //Post to User when a song is liked
   app.put("/api/decision/like", function(req, res) {
-    var columnName = req.body.genre + "Like";
+    var columnName = req.body.genre.toLowerCase() + "Like";
     var data = {};
-    console.log(req.body);
-    // console.log(columnName);
+    //console.log(req.body);
+    console.log(columnName);
     data[columnName] = setupLike(columnName);
+    console.log(data[columnName]);
     db.User.update(data, { where: { id: req.body.id } })
       .then(
         db.Rating.create({
@@ -89,7 +97,7 @@ module.exports = function(app) {
 
   //Post to User when a song is disliked
   app.put("/api/decision/dislike", function(req, res) {
-    var columnName = req.body.genre + "Dislike";
+    var columnName = req.body.genre.toLowerCase() + "Dislike";
     var data = {};
     console.log(req.body);
     // console.log(columnName);
@@ -140,6 +148,7 @@ module.exports = function(app) {
   });
   // Get for a recommended song based on data for the user.
   app.get("/api/recommended-song/:id", function(req, res) {
+    console.log("req.params.id " + req.params.id);
     db.User.findOne({
       where: {
         id: req.params.id
@@ -153,13 +162,31 @@ module.exports = function(app) {
         "popDislike",
         "countryLike",
         "countryDislike",
-        "altLike",
-        "altDislike"
+        "alternativeLike",
+        "alternativeDislike"
       ]
     }).then(function(userIdResult) {
-      var favoriteGenre = genrePrompt(userIdResult);
+      var favoriteGenre = songPicker.genrePrompt(userIdResult);
+      console.log(favoriteGenre);
       findRandomSong(favoriteGenre, function(randomSong) {
-        res.json(randomSong);
+        spotify.search({ type: "track", query: randomSong.songName }, function(
+          err,
+          data
+        ) {
+          if (err) {
+            return console.log("Error occurred: " + err);
+          }
+          var spotifyPath = data.tracks.items;
+          console.log(spotifyPath[0].id);
+          var finalSong = {
+            song: randomSong.songName,
+            artist: randomSong.artist,
+            genre: randomSong.genre,
+            id: spotifyPath[0].id
+          };
+          //res.json(finalSong);
+          res.json(finalSong);
+        });
       });
     });
   });
@@ -198,31 +225,31 @@ function findRandomSong(genre, cb) {
 
 function setupLike(columnName) {
   switch (columnName) {
-    case "rockLike":
-      return Sequelize.literal("rockLike + 1");
-    case "rapLike":
-      return Sequelize.literal("rapLike + 1");
-    case "alternativeLike":
-      return Sequelize.literal("alternativeLike + 1");
-    case "countryLike":
-      return Sequelize.literal("countryLike + 1");
-    case "popLike":
-      return Sequelize.literal("popLike + 1");
+  case "rockLike":
+    return Sequelize.literal("rockLike + 1");
+  case "rapLike":
+    return Sequelize.literal("rapLike + 1");
+  case "alternativeLike":
+    return Sequelize.literal("alternativeLike + 1");
+  case "countryLike":
+    return Sequelize.literal("countryLike + 1");
+  case "popLike":
+    return Sequelize.literal("popLike + 1");
   }
 }
 
 function setupDislike(columnName) {
   switch (columnName) {
-    case "rockDislike":
-      return Sequelize.literal("rockDislike + 1");
-    case "rapDislike":
-      return Sequelize.literal("rapDislike + 1");
-    case "alternativeDislike":
-      return Sequelize.literal("alternativeDislike + 1");
-    case "countryDislike":
-      return Sequelize.literal("countryDislike + 1");
-    case "popDislike":
-      return Sequelize.literal("popDislike + 1");
+  case "rockDislike":
+    return Sequelize.literal("rockDislike + 1");
+  case "rapDislike":
+    return Sequelize.literal("rapDislike + 1");
+  case "alternativeDislike":
+    return Sequelize.literal("alternativeDislike + 1");
+  case "countryDislike":
+    return Sequelize.literal("countryDislike + 1");
+  case "popDislike":
+    return Sequelize.literal("popDislike + 1");
   }
 }
 
