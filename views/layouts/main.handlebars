@@ -56,6 +56,7 @@
         case "/main":
           // this is already undefined when we get here
           id = localStorage.getItem("id");
+          username = localStorage.getItem("username");
           console.log(id);
           $('#songScreenTitle').attr("style", "opacity: 0");
           $('#test').attr("style", "opacity: 0");
@@ -158,18 +159,20 @@
           }).then(function (response) {
             // associating the username and password with a id done on the back-end
             // need to be sent back the id;
-            console.log("post went");
-            localStorage.setItem("id", response.id);
-            credentialsAreGood = true;
-            console.log(localStorage.getItem("id"));
-
-            if (credentialsAreGood) {
-              window.location.href = "/main";
+            if (response.status === "error") {
+              $("#linebreak").remove();
+              $("#loginFail").remove();
+              $(".login-modal").append("<br id='linebreak'><p id='loginFail' style=color:red; class='error'>Incorrect Login Information</p>")
             }
             else {
-              $(".login-modal").append("<br><p id='loginFail' style=color:red; class='error'>Incorrect Login Information</p>")
+              console.log(response);
+              console.log("post went");
+              localStorage.setItem("id", response.id);
+              localStorage.setItem("username", response.username);
+              credentialsAreGood = true;
+              console.log(localStorage.getItem("id"));
+              window.location.href = "/main";
             }
-
           });
 
         });
@@ -192,11 +195,11 @@
         if (choice === "recommend") {
           // Jeff & Kensen to verify (need to do api/recommended-songs/:id)
           apiRoute = "api/recommended-song/" + id
-          $("#yourChoice").text("You're currently viewing our list of recommend songs for you...")
+          $("#yourChoice").text("Welcome, " + username + "! you're currently viewing our list of recommend songs for you...")
         }
         else {
           apiRoute = "api/random-song"
-          $("#yourChoice").text("Here's our list of random songs...")
+          $("#yourChoice").text("Welcome, " + username + "! here's our list of random songs...")
         }
         $(".changeButton").on("click", function () {
           location.reload();
