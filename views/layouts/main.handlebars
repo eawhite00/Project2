@@ -150,14 +150,15 @@
           }
           console.log(login.email);
           console.log(login.password);
+          localStorage.setItem("test", "test!");
           //find id using the above (ajax post/get for credentials), if successful
-
           $.ajax("/api/login", {
             type: "POST",
             data: login
           }).then(function (response) {
             // associating the username and password with a id done on the back-end
             // need to be sent back the id;
+            console.log("post went");
             localStorage.setItem("id", response.id);
             credentialsAreGood = true;
             console.log(localStorage.getItem("id"));
