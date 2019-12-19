@@ -17,8 +17,8 @@ console.error("Please help us!");
 var Spotify = require("node-spotify-api");
 
 var spotify = new Spotify({
-  id: "2eecd783aacc4761818529ac1433a35e",
-  secret: "a73eb004d49344f199327df1da7dca08"
+  id: process.env.SPOTIFY_ID,
+  secret: process.env.SPOTIFY_SECRET
 });
 
 var songPicker = require("../scripts/genreSorter");
