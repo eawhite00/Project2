@@ -29,6 +29,25 @@ module.exports = function(app) {
     });
   });
 
+  // Login route. Checks if the user is in the db, and returns their userid.
+  app.post("/api/login", function(req, res) {
+    console.log("Logging in user ");
+    db.User.findOne({
+      where: {
+        username: req.body.email,
+        password: req.body.password
+      }
+    }).then(function(dbUserResult) {
+      console.log(dbUserResult);
+      var userData = {
+        id: dbUserResult.id,
+        username: dbUserResult.username
+      };
+      console.log(userData);
+      res.json(userData);
+    });
+  });
+
   //Post to User when a song is liked
   app.put("/api/decision/like", function(req, res) {
     var columnName = req.body.genre + "Like";
@@ -36,7 +55,6 @@ module.exports = function(app) {
     console.log(req.body);
     // console.log(columnName);
     data[columnName] = setupLike(columnName);
-
     db.User.update(data, { where: { id: req.body.id } })
       .then(
         db.Rating.create({
