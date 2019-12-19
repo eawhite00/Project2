@@ -162,15 +162,14 @@
             localStorage.setItem("id", response.id);
             credentialsAreGood = true;
             console.log(localStorage.getItem("id"));
-            function delay() {
-              if (credentialsAreGood) {
-                window.location.href = "/main";
-              }
-              else {
-                $(".login-modal").append("<br><p id='loginFail' style=color:red; class='error'>Incorrect Login Information</p>")
-              }
+
+            if (credentialsAreGood) {
+              window.location.href = "/main";
             }
-            setTimeout(delay, 2000);
+            else {
+              $(".login-modal").append("<br><p id='loginFail' style=color:red; class='error'>Incorrect Login Information</p>")
+            }
+
           });
 
         });
