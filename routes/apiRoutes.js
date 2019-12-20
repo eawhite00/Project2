@@ -1,10 +1,3 @@
-// NEEDED ROUTES
-// Post to User when creating users **DONE**
-// Get for a single random song **DONE**
-// Get for a single recommended song. Read the user table to determine what your most liked genre is and display a new song with that genre. **DONE**
-// Post to User? when the user likes or dislikes a song **DONE**
-// Get for all your liked songs
-// GET request for the spotify search
 var Sequelize = require("sequelize");
 var db = require("../models");
 
@@ -24,7 +17,7 @@ var spotify = new Spotify({
 var songPicker = require("../scripts/genreSorter");
 
 module.exports = function(app) {
-  // Get all liked songs where the userid in the database matches the userid param. Include a join from the 'users' table so we have a grab on the foreign/primary keys.
+  // Get all liked songs where the userid in the database matches the userid param. Include a join from the 'users' table so we have a grab on the foreign/primary keys. This is not used in MVP, but it's necessary for future features.
   app.get("/api/favorites/:id", function(req, res) {
     db.Song.findAll({
       where: {
@@ -48,12 +41,10 @@ module.exports = function(app) {
       if (dbUserResult === null) {
         res.json({ status: "error" });
       } else {
-        console.log(dbUserResult);
         var userData = {
           id: dbUserResult.id,
           username: dbUserResult.username
         };
-        console.log(userData);
         res.json(userData);
       }
     });
@@ -63,10 +54,8 @@ module.exports = function(app) {
   app.put("/api/decision/like", function(req, res) {
     var columnName = req.body.genre.toLowerCase() + "Like";
     var data = {};
-    //console.log(req.body);
-    console.log(columnName);
+
     data[columnName] = setupLike(columnName);
-    console.log(data[columnName]);
     db.User.update(data, { where: { id: req.body.id } })
       .then(
         db.Rating.create({
@@ -78,7 +67,6 @@ module.exports = function(app) {
         })
       )
       .then(function(dbUpdateResult) {
-        console.log(dbUpdateResult);
         res.json(dbUpdateResult);
       });
   });
@@ -87,14 +75,12 @@ module.exports = function(app) {
   app.put("/api/start/like", function(req, res) {
     var columnName = req.body.genre + "Like";
     var data = {};
-    console.log(req.body);
-    // console.log(columnName);
+
     data[columnName] = setupLike(columnName);
 
     db.User.update(data, { where: { id: req.body.id } }).then(function(
       dbUpdateResult
     ) {
-      console.log(dbUpdateResult);
       res.json(dbUpdateResult);
     });
   });
@@ -103,8 +89,7 @@ module.exports = function(app) {
   app.put("/api/decision/dislike", function(req, res) {
     var columnName = req.body.genre.toLowerCase() + "Dislike";
     var data = {};
-    console.log(req.body);
-    // console.log(columnName);
+
     data[columnName] = setupDislike(columnName);
 
     db.User.update(data, { where: { id: req.body.id } })
@@ -118,7 +103,6 @@ module.exports = function(app) {
         })
       )
       .then(function(dbUpdateResult) {
-        console.log(dbUpdateResult);
         res.json(dbUpdateResult);
       });
   });
@@ -134,25 +118,19 @@ module.exports = function(app) {
           return console.log("Error occurred: " + err);
         }
         var spotifyPath = data.tracks.items;
-        console.log(spotifyPath[0].id);
         var finalSong = {
           song: randomSong.songName,
           artist: randomSong.artist,
           genre: randomSong.genre,
           id: spotifyPath[0].id
         };
-        //res.json(finalSong);
         res.json(finalSong);
       });
-      // db.Song.findOne({ order: "rand()" }).then(function(randomSong) {
-      //   console.log(randomSong);
-      //   res.json(randomSong);
-      // });
     });
   });
+
   // Get for a recommended song based on data for the user.
   app.get("/api/recommended-song/:id", function(req, res) {
-    console.log("req.params.id " + req.params.id);
     db.User.findOne({
       where: {
         id: req.params.id
@@ -170,9 +148,7 @@ module.exports = function(app) {
         "alternativeDislike"
       ]
     }).then(function(userIdResult) {
-      console.log("THIS IS THE USER ID: ", userIdResult);
       var favoriteGenre = songPicker.genrePrompt(userIdResult);
-      console.log(favoriteGenre);
       findRandomSong(favoriteGenre, function(randomSong) {
         spotify.search({ type: "track", query: randomSong.songName }, function(
           err,
@@ -182,14 +158,13 @@ module.exports = function(app) {
             return console.log("Error occurred: " + err);
           }
           var spotifyPath = data.tracks.items;
-          console.log(spotifyPath[0].id);
           var finalSong = {
             song: randomSong.songName,
             artist: randomSong.artist,
             genre: randomSong.genre,
             id: spotifyPath[0].id
           };
-          //res.json(finalSong);
+
           res.json(finalSong);
         });
       });
@@ -202,7 +177,6 @@ module.exports = function(app) {
       username: req.body.email,
       password: req.body.password
     }).then(function(newUser) {
-      console.log(newUser);
       res.json(newUser);
     });
   });
@@ -223,7 +197,6 @@ function findRandomSong(genre, cb) {
     order: Sequelize.literal("rand()"),
     where: whereOption
   }).then(function(randomSong) {
-    console.log(randomSong);
     cb(randomSong);
   });
 }
@@ -257,17 +230,3 @@ case "popDislike":
   return Sequelize.literal("popDislike + 1");
   }
 }
-
-// *NOT SURE IF THIS IS NEEDED **
-// app.post("/api/favsong", function(req, res) {
-//   db.songs
-//     .create({
-//       songName: req.body.name,
-//       artistName: req.body.artist,
-//       songDetails: req.body.details
-//     })
-//     .then(function(response) {
-//       console.log(response);
-//       res.json({ id: response.insertId });
-//     });
-// });
