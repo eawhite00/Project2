@@ -2,7 +2,7 @@
 
 var genrePrompt = function(userIdResult) {
   var user = userIdResult;
-  console.log("within genresorter" + userIdResult);
+  console.log("within genresorter", userIdResult);
 
   var storageA;
   var storageC;
@@ -18,10 +18,12 @@ var genrePrompt = function(userIdResult) {
   // Score Rock
   ratingStore(user.rockLike, user.rockDislike, rockRate);
   rockRate = [percentage, "Rock"];
+  console.log("rockRate is: ", rockRate);
 
   // Score Rap
   ratingStore(user.rapLike, user.rapDislike, rapRate);
   rapRate = [percentage, "Rap"];
+  console.log("rapRate is: ", rapRate);
 
   // Score Pop
   ratingStore(user.popLike, user.popDislike, popRate);
@@ -49,19 +51,27 @@ var genrePrompt = function(userIdResult) {
 
     //Push percentages to array to sort
     for (i = 0; i < holder.length; i++) {
+      if (isNaN(holder[i][0])) {
+        holder[i][0] = 0;
+      }
       checkList.push(holder[i][0]);
+      console.log("This is holder[i]", holder[i]);
+      checkList.sort(function(a, b) {
+        console.log("This is checklist before sorted: ", checkList);
+        return b - a;
+      });
     }
 
     //Sort percentages from biggest to smallest
-    checkList.sort(function(a, b) {
-      return b - a;
-    });
-
+    // checkList.sort(function(a, b) {
+    //   console.log("This is the result of checklist:", b - a);
+    // });
+    
     //Find the genre name of the highest percentage holder
     for (i = 0; i < holder.length; i++) {
       if (checkList[0] === holder[i][0]) {
-        console.log("***** HOLDER I I IS " + holder[i][1]);
-        return holder[i][1];
+        console.log("***** HOLDER I 1 IS " + holder[i][1]);
+        winnerName = holder[i][1];
       }
     }
 
@@ -92,13 +102,16 @@ var genrePrompt = function(userIdResult) {
   // Code to store and process song ratings
   function ratingStore(like, dislike) {
     storageA = parseFloat(like);
+    console.log("This is storageA: ", storageA);
 
     storageC = parseFloat(dislike) + storageA;
+    console.log("This is storageB: ", storageA);
 
     // Math to figure out percentages
     percentage = storageA / storageC;
     percentage = percentage * 100;
     percentage = Math.round(percentage);
+    console.log("This is percentage: ", percentage);
   }
 
   function logRatings() {
@@ -108,6 +121,8 @@ var genrePrompt = function(userIdResult) {
     console.log("Country like rating is: " + countryRate[0] + "%");
     console.log("Alternative like rating is: " + altRate[0] + "%");
   }
+
+  return winnerName;
 };
 
 exports.genrePrompt = genrePrompt;

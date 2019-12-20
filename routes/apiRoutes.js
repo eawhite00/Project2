@@ -170,6 +170,7 @@ module.exports = function(app) {
         "alternativeDislike"
       ]
     }).then(function(userIdResult) {
+      console.log("THIS IS THE USER ID: ", userIdResult);
       var favoriteGenre = songPicker.genrePrompt(userIdResult);
       console.log(favoriteGenre);
       findRandomSong(favoriteGenre, function(randomSong) {
