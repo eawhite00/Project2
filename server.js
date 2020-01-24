@@ -8,6 +8,8 @@ var dbFill = require("./populateDB");
 var app = express();
 var PORT = process.env.PORT || 3000;
 
+var chalk = require("chalk");
+
 // Middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -43,6 +45,9 @@ db.sequelize.sync(syncOptions).then(function() {
       PORT,
       PORT
     );
+
+    //We removed extra console logs from our code, but are retaining this one as an example of using chalk to highlight logs  
+    console.log(chalk.blue("Welcome!"));
   });
 });
 
