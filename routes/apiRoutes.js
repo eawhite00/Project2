@@ -1,12 +1,5 @@
 var Sequelize = require("sequelize");
 var db = require("../models");
-
-// require("dotenv").config();
-
-// var keys = require("../keys");
-
-console.error("Please help us!");
-
 var Spotify = require("node-spotify-api");
 
 var spotify = new Spotify({
